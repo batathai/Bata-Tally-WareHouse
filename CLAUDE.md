@@ -148,6 +148,53 @@ stock), `reconcile_scans` (one row per barcode scan, matched against
   implementation is a fresh build against Supabase, not a port of that
   tool's actual code.
 
+## Transfer analysis findings (2025 – 4 Nov 2026, recorded 2026-11-05)
+
+Read-only analysis of `dispatch`/`receiving` for a "store → store" and
+"store → warehouse" transfer report (Excel, by year). Things learned that
+are easy to get wrong:
+
+- **There is no carton/box column** in `dispatch` or `receiving` (nor in
+  `dispatchWarehouse`/`receivingWarehouse`, whose `A`–`M` columns are
+  per-size pair counts, nor in `dispatchVinculum`/`stockmovement`). `items`
+  is **pairs (คู่)**. Never label report numbers as "boxes".
+- **`dispatch` and `receiving` are the same transfers seen from each side**
+  (per-sender totals nearly identical). Never add them together. Use
+  `dispatch` for store → store and treat `receiving` as a cross-check.
+  Totals 2025 = 5,352,376 pairs / 54,688 invoices; 2026 (to 4 Nov) =
+  720,194 pairs / 45,886 invoices. Store → warehouse (receiver `57702`) is
+  a subset of those: 343,708 pairs (2025) and 77,397 pairs (2026).
+- **2025 is inflated by one-off mass moves and round trips** (Feb–Apr 2025,
+  some recurring into 2026): e.g. 51524→24047 (~1.46M pairs, 3 invoices),
+  51435→51431 (~702K), and out-and-back pairs 51428↔51944, 51506↔57702,
+  51404↔24037, 75014↔51506 (~285–291K pairs each way). Report them in a
+  separate "special items" sheet (flows ≥ 50,000 pairs) instead of mixing
+  them into normal volume; normal 2025 store → store ≈ 0.83M pairs.
+- **Store names come from the MySQL `store` table** (`code`, `name`,
+  `profile`, `reportingGroup`, …). It does **not** contain every code seen
+  in transfers — 93 of 314 codes are missing (24036+ i.e. most 24xxx fair
+  codes incl. 24037/24047, 29999, 30xxx, 51406, 51501, 52013, 52021,
+  52027, 53001, 54095–54098, 55049, 57703, 57707, 66610). Leave those
+  names blank and flag them; don't guess. The warehouse manifest (below)
+  carries names for some of them (e.g. 24098, 54095, 52021).
+- Code meanings confirmed from `store`: `24000`–`24030` = Fair /
+  clearance stores; `57702` = **RETURN D.C.** (return warehouse);
+  `57701` = SUPPLY DISCREPENCY, `57705` = DAMAGE D.C.; `68000` =
+  Warehouse; `66609` = Online sales Dummy; `59992/59994/59998` = B2B
+  wholesale. `66610` is not in `store` (meaning unconfirmed).
+- **Carton counts live in a different system**: SQL Server database
+  `IS_Warehouse` on the office LAN, via stored procedure
+  `Qry_GetManifestByDate(@dateFrom, @dateTo)` (the same source as the
+  warehouse's `Warehouse_Manifest_Report.xlsm`). One row per invoice to a
+  destination store, with Big/Small/Total Carton and ordered/final pairs
+  and accessories. It covers **warehouse → store only** (no origin column,
+  origin is always the warehouse), so it cannot give boxes for
+  store → store transfers. Navicat's ODBC Driver 18 failed against that
+  server (old SQL Server); SSMS or the Excel macro's legacy driver works.
+  Credentials are in the team's own notes — **never write them in this
+  public repo.** Whether its invoice numbers match `dispatch.invoice` is
+  not yet verified.
+
 ## Secrets / credentials
 
 - `.env` (git-ignored) holds `MYSQL_HOST/USER/PASSWORD/DATABASE`,
