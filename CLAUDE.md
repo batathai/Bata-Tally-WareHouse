@@ -192,8 +192,96 @@ are easy to get wrong:
   store → store transfers. Navicat's ODBC Driver 18 failed against that
   server (old SQL Server); SSMS or the Excel macro's legacy driver works.
   Credentials are in the team's own notes — **never write them in this
-  public repo.** Whether its invoice numbers match `dispatch.invoice` is
-  not yet verified.
+  public repo.** Its invoice number (`pickno`) is the text before the first
+  `_` of `receiving.invoice` for sender `68000` (verified 2026-11-16, see
+  the next section).
+
+## Warehouse → Yusen → store tracking (recorded 2026-11-16)
+
+The "ติดตามใบจากคลัง" panel at the top of the สถานะการส่งของ menu follows one
+warehouse invoice through three sources. **Most of the code for it is not in
+this repo yet** — it lives only on the dev PC ("machine A") and the office
+server ("machine B", serves the app on port 3001 and runs the sync
+services). GitHub still holds the 2026-09-22 code. Push the missing files
+(after checking for secrets) before relying on this repo as the source of
+truth.
+
+Files that exist on the machines but not here: `sync_manifest.py`,
+`wh-trace.js`, `wh-trace-ui.js`, `apply-wh-trace.js`, `import-yusen.js`,
+`yusen-schema.sql`, `yusen-upload.html`, `regroup-check.js`,
+`Index/regroup-check.html`, plus later versions of `sync.js`,
+`api-server.js` and `Index/index.html`.
+
+### The three sources and how they join
+
+| Step shown | Source | Key |
+|---|---|---|
+| สั่ง Order / แพ็กเสร็จ / ออกจากคลัง | Supabase `manifest`, filled by `sync_manifest.py` from SQL Server `IS_Warehouse` (`Qry_GetManifestByDate`) | `invoice` = warehouse pick number, e.g. `87162` |
+| Yusen รับของ / ถึง Hub / ถึงหน้าสาขา | Supabase `yusen_deliveries`, filled by `import-yusen.js` from Yusen's daily Excel report | `final_invoice` = `manifest.final_no` (10 digits, `26000…`) |
+| สาขากดรับเข้า + Article/size lines | MySQL `receiving`, read live through `/api/wh-trace/*` | `SUBSTRING_INDEX(invoice,'_',1)` = pick number, `sender = '68000'` (full form `87162_202611_68000`) |
+
+- In `receiving`, `sendDate` is the day the warehouse shipped and
+  `documentDate`/`bookedDate` are the day the store booked the receipt.
+  Checked on one store (55030, ~90 invoices since late Aug 2026): the gap
+  was always 1–8 days, never 0, and receipts arrive in same-day batches —
+  consistent with a real store-side booking, not a row created at dispatch.
+  It still only proves the store's system booked it, not that the goods
+  are physically there.
+- Store receipts reach MySQL the next morning (Talend load, about
+  07:00–07:45). A store that receives today shows as "not received" until
+  tomorrow.
+- The search box takes Final No, pick numbers, a pick range such as
+  `87134-87172` (4–6 digit numbers only, max 2,000 per range) or a 7-digit
+  Article.
+
+### Time zone bug in the manifest sync (fixed 2026-11-16)
+
+SQL Server stores Bangkok wall-clock time with no zone. `sync_manifest.py`
+sent it as-is, Supabase (`timestamptz`) read it as UTC, and the browser
+added 7 hours: 15:02 showed as 22:02 and evening times rolled into the
+next day (wrong date as well as time). The UI was correct; only the stored
+data was wrong.
+
+- Fix: `iso_or_none` now sends datetimes with an explicit `+07:00`.
+- `sync_manifest.py` gained `--from YYYY-MM-DD [--to YYYY-MM-DD]` (re-sync a
+  fixed range, never reads or moves the watermark) and `--dry-run`.
+- A full re-sync `--from 2026-01-01` was started on 2026-11-16 to correct
+  the rows already stored. **Confirm it finished**: pick `87137` must show
+  ออกจากคลัง 14/11/2026 15:02, matching `t_deliveries.deliverydate`.
+- Any new code that writes a SQL Server datetime to Supabase must attach
+  `+07:00` the same way. Dates from MySQL `receiving` are date-only and are
+  not affected.
+
+### Manifest sync is still manual
+
+`sync_manifest.py` is run by hand on machine A; moving it to machine B as a
+scheduled job is unfinished. Before 2026-11-16 it had not run since
+2026-10-05, so the การขนส่ง menu and this panel showed no newer invoices.
+Until it is scheduled, run it before checking recent invoices.
+
+### Yusen daily report
+
+- First real import done 2026-11-16 (report dated 16-Nov-2026, 2,216 rows).
+- The report arrives by email every day as an `.xlsx` attachment named
+  like `Bata - Daily Report ( 16-Nov-2026).xlsx` (note the space after the
+  bracket). A second mail the same day, titled with a month range such as
+  `(01-31-Oct-2026)`, updates the previous month's open invoices.
+- Sheet used: `1-Daily report (Normal)`. Header cells carry a second line
+  (a type hint) that the importer strips. Rows without a `Final Invoice`
+  are skipped (819 of 3,035 in that file; their bill numbers look like
+  `11-140`, meaning unknown). For rows that have one, `เลขที่บิล` is
+  `<store>-<pick>`, e.g. `55030-87162`.
+- `node import-yusen.js "<file>.xlsx" [--dry-run]` imports one local file;
+  with no argument it processes files uploaded through `yusen-upload.html`
+  (token links, Storage bucket `yusen-uploads`, log table
+  `yusen_uploads_log`). The upload page and automatic pickup from the
+  mailbox are **not set up yet** — imports are manual for now.
+- Dates are read from the Excel serial number, never through
+  `Date.toISOString()`, for the same time zone reason as above.
+- Not every store is in Yusen's report. For picks 87134–87172, 19 of 39
+  were present (upcountry stores); the 20 missing were 514xx/519xx, 51506,
+  54098 and 54023. Presumably those are delivered by another carrier —
+  **unconfirmed**. For those stores the Yusen steps stay blank.
 
 ## Secrets / credentials
 
