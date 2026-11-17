@@ -1,3 +1,19 @@
 node_modules/
 .env
 sync-state.json
+
+# local only - never push
+*.bak-*
+Index/index - Copy.html
+*.xlsx
+*.xlsm
+logs/
+sync-manifest-state.json
+sync-state.backup.json
+Supabase
+DEPLOYMENT.md
+sync_manifest.py
+test-manifest-connection.js
+test_manifest_connection.py
+import-yusen.js
+sync-manifest.bat

@@ -447,6 +447,102 @@
     .modgrid{ grid-template-columns: 1fr 1fr; }
     table{ display:block; overflow-x:auto; }
   }
+
+  /* 3D-WAREHOUSE: icon rail sidebar (desktop) + full-height 3D home */
+  @media (min-width: 721px){
+    .shell.ready{ height:100vh; overflow:hidden; }
+    .shell.ready .main{ overflow-y:auto; height:100vh; }
+    .sidebar{ width:76px; flex:0 0 76px; padding:18px 0 18px; align-items:center; overflow-y:auto; overflow-x:hidden; scrollbar-width:none; }
+    .sidebar::-webkit-scrollbar{ display:none; }
+    .side-brand{ flex-direction:column; align-items:center; gap:0; padding:2px 0 14px; }
+    .side-brand .mark{ font-size:15px; }
+    .side-brand .sub{ font-size:9px; letter-spacing:.12em; }
+    .side-label{ font-size:0; padding:0; height:1px; width:36px; background:var(--sidebar-line); margin:10px auto; flex:none; }
+    .nav-group{ display:flex; flex-direction:column; align-items:center; gap:4px; width:100%; }
+    .nav-item{ position:relative; width:48px; height:44px; padding:0; justify-content:center; border-radius:12px; border-left:none !important; opacity:.62; flex:none; }
+    .nav-item svg{ width:20px; height:20px; flex:0 0 20px; }
+    .nav-item .nav-txt{ display:none; }
+    .nav-item:hover{ background:var(--panel-2); opacity:1; }
+    .nav-item.active{ background:var(--brand); color:#fff; opacity:1; box-shadow:0 6px 16px rgba(200,16,46,.28); }
+    .nav-item.active svg{ color:#fff; }
+    .nav-item .nav-badge{ position:absolute; top:4px; right:3px; margin:0; min-width:16px; height:16px; line-height:16px; font-size:10px; padding:0 4px; box-shadow:0 0 0 2px var(--sidebar); }
+    body.wh3d-home .main{ padding:18px 22px 18px; }
+    body.wh3d-home .topline{ margin-bottom:14px; }
+  }
+  .rail-tip{ position:fixed; z-index:9999; pointer-events:none; background:#241F1D; color:#fff; font-size:12.5px; padding:6px 11px; border-radius:8px;
+    white-space:nowrap; box-shadow:0 8px 22px rgba(0,0,0,.18); opacity:0; transform:translateX(-4px); transition:opacity .12s, transform .12s; }
+  .rail-tip.on{ opacity:1; transform:none; }
+  .rail-tip::before{ content:""; position:absolute; left:-5px; top:50%; margin-top:-5px; border:5px solid transparent; border-left:0; border-right-color:#241F1D; }
+  .nav-badge{margin-left:auto;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--brand);color:#fff;font-size:11px;font-weight:700;line-height:18px;text-align:center;font-family:'Space Grotesk',sans-serif;}
+  .pill-new{display:inline-block;font-size:10px;font-weight:700;color:#fff;background:var(--brand);border-radius:3px;padding:1px 6px;margin-left:6px;vertical-align:middle;}
+  .live-row{cursor:pointer;}
+  .live-row:hover{background:var(--panel-2);}
+  .live-detail-dlg{border:1px solid var(--line);border-radius:6px;padding:0;max-width:760px;width:94%;color:var(--ink);background:var(--panel);}
+  .live-detail-dlg::backdrop{background:rgba(20,15,14,.4);}
+  .live-detail-dlg .ld-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line);}
+  .live-detail-dlg .ld-head h3{margin:0;font-size:16px;}
+  .live-detail-dlg .ld-sub{font-size:12px;color:var(--ink-soft);margin-top:4px;}
+  .live-detail-dlg .ld-body{padding:16px 20px;max-height:70vh;overflow:auto;}
+  .live-detail-dlg .ld-tot{margin-top:10px;text-align:right;font-size:13px;font-weight:600;font-family:'Space Grotesk',sans-serif;}
+  .live-detail-dlg{max-width:940px;}
+  .live-detail-dlg .ld-matrix table{white-space:nowrap;}
+  .live-detail-dlg .ld-matrix td.sz{color:var(--brand);font-weight:600;}
+  .live-detail-dlg .ld-foot td{font-weight:700;border-top:2px solid var(--line);}
+
+  /* SHIPMENT-STATUS */
+  .ship-kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:18px; }
+  .ship-kpis .kpi{ cursor:pointer; }
+  .ship-kpis .kpi.active{ border-color:var(--brand); box-shadow:inset 0 0 0 1px var(--brand); }
+  .tag.ship-onway{ background:color-mix(in srgb, var(--ink-soft) 16%, transparent); color:var(--ink); }
+  .ship-neg{ color:var(--brand); font-weight:600; }
+  .ship-pos{ color:var(--amber); font-weight:600; }
+  .ship-old{ color:var(--brand); font-weight:600; }
+  .ship-diag{ padding:14px 16px; font-size:12.5px; line-height:1.7; margin-bottom:18px; display:none; }
+  .ship-diag.show{ display:block; }
+  .ship-diag h4{ margin:0 0 6px; font-size:13px; }
+  .ship-diag .cols{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .ship-scroll{ overflow-x:auto; }
+  .ship-scroll th, .ship-scroll .tag{ white-space:nowrap; }
+  @media (max-width:980px){ .ship-kpis{ grid-template-columns:repeat(2,1fr); } .ship-diag .cols{ grid-template-columns:1fr; } }
+
+  /* ARTICLE-TRACE v6 — ค้นหาตาม Article (จ่ายสินค้าออก) */
+  .at-panel{ background:var(--panel); border:1px solid var(--line); border-radius:var(--radius, 4px); padding:16px 18px; margin-bottom:18px; }
+  .at-panel[hidden]{ display:none; }
+  .at-form{ display:grid; grid-template-columns:minmax(150px,1.2fr) minmax(190px,1.3fr) repeat(2,minmax(130px,1fr)) auto auto; gap:8px; align-items:center; margin-bottom:12px; }
+  .at-quick{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px; }
+  .at-quick .live-btn{ padding:4px 10px; font-size:12px; }
+  .at-sum{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:10px; margin-bottom:16px; }
+  .at-sum > div{ border:1px solid var(--line); border-radius:3px; padding:10px 12px; }
+  .at-sum .l{ font-size:11.5px; color:var(--ink-soft); }
+  .at-sum .v{ font-size:20px; font-weight:600; font-family:'Space Grotesk',sans-serif; margin-top:2px; }
+  .at-scroll{ overflow-x:auto; }
+  .at-scroll th{ white-space:nowrap; }
+  #atBranchBody tr{ cursor:pointer; }
+  #atBranchBody tr:hover td{ background:var(--panel-2); }
+  #atBranchBody tr.sel td{ background:color-mix(in srgb, var(--brand) 10%, transparent); font-weight:600; }
+  .at-bar{ height:6px; background:var(--brand); border-radius:1px; opacity:.75; min-width:2px; }
+  .at-sizes{ font-size:11.5px; color:var(--ink-soft); max-width:320px; white-space:normal; }
+  .at-msg{ font-size:12.5px; color:var(--ink-soft); margin:6px 0 0; }
+  .at-modal{ position:fixed; inset:0; z-index:1000; background:rgba(20,12,11,.45); display:flex; align-items:flex-start; justify-content:center;
+    padding:calc(24px + env(safe-area-inset-top, 0px)) 16px calc(24px + env(safe-area-inset-bottom, 0px)); overflow-y:auto; }
+  .at-modal[hidden]{ display:none; }
+  .at-modal-box{ background:var(--panel); color:var(--ink); border:1px solid var(--line); border-radius:6px; width:100%; max-width:1180px;
+    box-shadow:0 18px 50px rgba(0,0,0,.25); padding:20px 22px 22px; }
+  .at-modal-head{ display:flex; gap:12px; align-items:flex-start; justify-content:space-between; margin-bottom:14px; flex-wrap:wrap; }
+  .at-modal-head h3{ margin:0; font-size:18px; font-weight:600; }
+  .at-modal-head .sub{ font-size:12.5px; color:var(--ink-soft); margin-top:4px; }
+  .at-modal-actions{ display:flex; gap:8px; }
+  body.at-modal-open{ overflow:hidden; }
+  th[data-at-sort]{ cursor:pointer; user-select:none; white-space:nowrap; }
+  th[data-at-sort]:hover{ color:var(--ink); }
+  th[data-at-sort].sorted{ color:var(--brand); }
+  .at-ind{ font-size:10px; margin-left:3px; }
+  .at-note{ font-size:12px; color:var(--ink-soft); margin:-4px 0 14px; }
+  .at-matrix td.num, .at-matrix th.num{ min-width:46px; }
+  .at-matrix td.zero{ color:var(--line); }
+  .at-matrix .tot{ font-weight:600; }
+  .at-matrix tr.totrow td{ border-top:2px solid var(--line); font-weight:600; }
+  @media (max-width:720px){ .at-form{ grid-template-columns:1fr 1fr; } .at-form input:first-child{ grid-column:1 / -1; } }
 </style>
 </head>
 <body>
@@ -480,11 +576,11 @@
 
     <div class="side-label">ภาพรวม</div>
     <div class="nav-group">
-      <button class="nav-item active" data-view="home" data-roles="admin,warehouse_staff,viewer">
+      <button class="nav-item" data-view="home" data-roles="admin,warehouse_staff,viewer" style="display:none"><!-- 3D-WAREHOUSE: replaced by แดชบอร์ด -->
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 9.5V20h14V9.5"/></svg>
         หน้าหลัก
       </button>
-      <button class="nav-item" data-view="dashboard" data-roles="admin,warehouse_staff,viewer">
+      <button class="nav-item active" data-view="dashboard" data-roles="admin,warehouse_staff,viewer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="12" width="4" height="8"/><rect x="10" y="7" width="4" height="13"/><rect x="17" y="3" width="4" height="17"/></svg>
         แดชบอร์ด
       </button>
@@ -495,6 +591,7 @@
       <button class="nav-item" data-view="alerts" data-roles="admin,warehouse_staff,viewer">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2 2 21h20L12 2z"/><path d="M12 10v5M12 18h.01"/></svg>
         แจ้งเตือน
+        <span class="nav-badge" id="alertsBadge" hidden>0</span>
       </button>
     </div>
 
@@ -515,6 +612,10 @@
       <button class="nav-item" data-view="return" data-roles="admin,warehouse_staff">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg>
         สินค้าคืนคลัง
+      </button>
+      <button class="nav-item" data-view="shipment" data-roles="admin,warehouse_staff"><!-- SHIPMENT-STATUS -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="7" width="13" height="9" rx="1"/><path d="M14 10h4l4 3v3h-8"/><circle cx="5.5" cy="19" r="1.6"/><circle cx="16.5" cy="19" r="1.6"/><path d="M4 11.5l2 2 4-4"/></svg>
+        สถานะการส่งของ
       </button>
       <button class="nav-item" data-view="issue" data-roles="admin,warehouse_staff">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 3h6l1 4h4v2H4V7h4l1-4z"/><path d="M6 9v11h12V9"/></svg>
@@ -584,6 +685,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.6 2.9-6.2 6.5-6.2s6.5 2.6 6.5 6.2"/><circle cx="18" cy="8.5" r="2.5"/><path d="M16.2 13.9c2.6.4 4.3 2.4 4.3 5.1"/></svg>
         จัดการผู้ใช้งาน
       </button>
+      <button class="nav-item" data-view="permissions" data-roles="admin">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="10" rx="1"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        จัดการสิทธิ์เมนู
+      </button>
     </div>
   </aside>
 
@@ -596,20 +701,18 @@
       </div>
       <div class="who">
         <div>
-          <div class="kicker" style="display:flex; align-items:center; justify-content:flex-end; gap:8px; flex-wrap:wrap;">
-            <span>สรุปสถานะ</span>
-            <input type="date" id="homeDateFilter" class="live-input" style="width:auto; padding:3px 6px; font-size:11px;">
-          </div>
+          <!-- 3D-WAREHOUSE: date picker moved onto the 3D cards -->
           <div id="whoName">—</div>
           <div class="role" id="whoRole">—</div>
         </div>
         <div class="avatar" id="whoAvatar">–</div>
         <button class="logout-btn" id="logoutBtn">ออกจากระบบ</button>
       </div>
+    </div>
 
     <!-- ═══════ HOME VIEW ═══════ -->
     <section class="view active" id="view-home">
-      <section class="hero">
+      <section class="hero" style="display:none"><!-- 3D-WAREHOUSE: hidden -->
         <div class="lede">
           <h2 id="heroHeadline">กำลังโหลดข้อมูลวันนี้…</h2>
           <p>ตัวเลขด้านล่างดึงจากฐานข้อมูลจริง (dispatch / receiving) ของวันที่เลือก — เปลี่ยนวันที่ด้านบนเพื่อย้อนดูวันอื่น</p>
@@ -620,7 +723,7 @@
         </div>
       </section>
 
-      <div class="bento">
+      <div class="bento" style="display:none"><!-- 3D-WAREHOUSE: moved into the 3D view -->
         <div class="kpi">
           <div class="label">รายการจ่ายออก (Dispatch)</div>
           <div class="value num" id="kpiDispatch">—</div>
@@ -643,6 +746,41 @@
         </div>
       </div>
 
+      <!-- 3D-WAREHOUSE -->
+      <div class="wh3d-wrap">
+        <div id="warehouse3d" style="height:640px;min-height:520px;"></div>
+        <div class="wh3d-cards">
+          <div class="wh3d-card wh3d-date">
+            <div class="wh3d-lab">ข้อมูลวันที่</div>
+            <input type="date" id="homeDateFilter" class="live-input">
+          </div>
+          <div class="wh3d-card"><div class="wh3d-lab">รายการจ่ายออก (Dispatch)</div><div class="wh3d-val" id="wh3dDispatch">—</div></div>
+          <div class="wh3d-card"><div class="wh3d-lab">รายการรับเข้า (Receiving)</div><div class="wh3d-val" id="wh3dReceiving">—</div></div>
+          <div class="wh3d-card"><div class="wh3d-lab">มูลค่ารวม (บาท)</div><div class="wh3d-val" id="wh3dAmount">—</div></div>
+          <div class="wh3d-card"><div class="wh3d-lab">ข้อมูลอัปเดตล่าสุด</div><div class="wh3d-val wh3d-sync"><i></i><span id="wh3dSynced">—</span></div></div>
+        </div>
+      </div>
+      <style>
+        /* 3D-WAREHOUSE */
+        .wh3d-wrap{ position:relative; border-radius:18px; overflow:hidden; border:1px solid #EDE6E2; background:#fff; box-shadow:0 18px 50px rgba(70,30,25,.08); }
+        .wh3d-cards{ position:absolute; top:16px; left:16px; right:16px; display:flex; flex-wrap:wrap; gap:12px; pointer-events:none; z-index:3; }
+        .wh3d-card{ pointer-events:auto; background:rgba(255,255,255,.95); border:1px solid #E7DFDA; border-radius:12px; padding:12px 18px; min-width:170px;
+          box-shadow:0 10px 30px rgba(70,30,25,.12), 0 1px 0 rgba(30,20,20,.04); backdrop-filter:blur(6px); }
+        .wh3d-lab{ font-size:12px; color:#7A706B; margin-bottom:4px; white-space:nowrap; }
+        .wh3d-val{ font-family:'Space Grotesk','IBM Plex Sans Thai',sans-serif; font-size:24px; font-weight:600; color:#241F1D; font-variant-numeric:tabular-nums; line-height:1.2; white-space:nowrap; }
+        .wh3d-sync{ display:flex; align-items:center; gap:8px; font-size:20px; }
+        .wh3d-sync i{ width:9px; height:9px; border-radius:50%; background:#2E9B63; box-shadow:0 0 0 0 rgba(46,155,99,.5); animation:wh3dPulse 1.6s infinite; }
+        @keyframes wh3dPulse{ 0%{box-shadow:0 0 0 0 rgba(46,155,99,.5)} 100%{box-shadow:0 0 0 8px rgba(46,155,99,0)} }
+        .wh3d-date input{ font-size:15px; padding:5px 8px; margin-top:2px; }
+        .wh3d-zoom{ position:absolute; right:16px; bottom:16px; display:flex; flex-direction:column; gap:6px; z-index:3; }
+        .wh3d-zoom button{ width:38px; height:38px; border-radius:10px; border:1px solid #E7DFDA; background:rgba(255,255,255,.95); font-size:18px; cursor:pointer; color:#241F1D; box-shadow:0 4px 14px rgba(70,30,25,.10); }
+        .wh3d-zoom button:hover{ background:#FBF1F1; color:#C8102E; }
+        @media (prefers-reduced-motion:reduce){ .wh3d-sync i{ animation:none; } }
+        /* 3D-MENUS */
+        .wh3m-host{ position:relative; border-radius:18px; overflow:hidden; border:1px solid #EDE6E2; background:#fff; box-shadow:0 18px 50px rgba(70,30,25,.08); margin-bottom:18px; }
+      </style>
+
+      <div style="display:none"><!-- 3D-WAREHOUSE: hidden (เมนูลัด ถึง เอกสารล่าสุด) -->
       <div class="section-head">
         <h3>เมนูลัด</h3>
         <div class="hint">แสดงเฉพาะเมนูที่บัญชีนี้มีสิทธิ์ใช้งาน</div>
@@ -667,6 +805,10 @@
         <button class="mod" data-view="transfer" data-roles="admin,warehouse_staff">
           <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 7l3-3M4 7l3 3"/><path d="M20 17H4M20 17l-3-3M20 17l-3 3"/></svg></div>
           <div><div class="name">โอนสินค้าระหว่างคลัง</div><div class="desc">ปรับตำแหน่งจัดเก็บ</div></div>
+        </button>
+        <button class="mod" data-view="transport" data-roles="admin,warehouse_staff">
+          <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="7" width="13" height="9" rx="1"/><path d="M14 10h4l4 3v3h-8"/><circle cx="5.5" cy="19" r="1.6"/><circle cx="16.5" cy="19" r="1.6"/></svg></div>
+          <div><div class="name">การขนส่ง</div><div class="desc">Manifest ส่งออกรายวัน</div></div>
         </button>
         <button class="mod" data-view="reconcile" data-roles="admin,warehouse_staff">
           <div class="top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M11 4a7 7 0 1 0 4.9 12L21 21"/></svg></div>
@@ -700,22 +842,49 @@
       <div class="foot-note">
         ข้อมูล Dispatch/Receiving ดึงจาก Supabase (sync จาก MySQL reporting DB) ส่วนจำนวน Article/Location ยังเป็นค่าประมาณ — เมื่อ sync ตาราง master data เพิ่มแล้วจะอัปเดตให้เป็นค่าจริงทั้งหมด
       </div>
+      </div><!-- /3D-WAREHOUSE hidden -->
     </section>
 
     <!-- ═══════ Generic placeholder views (nav wiring only — build out as needed) ═══════ -->
     <section class="view" id="view-dashboard"><div class="panel empty-note">หน้าแดชบอร์ดแบบละเอียด — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
     <section class="view" id="view-reports"><div class="panel empty-note">รายงานบริหาร — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/ผู้บริหาร)</div></section>
-    <section class="view" id="view-alerts"><div class="panel empty-note">แจ้งเตือน — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
-    <section class="view" id="view-receive"><div class="panel empty-note">รับสินค้าเข้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-dispatch">
+    <section class="view" id="view-alerts">
+      <div class="section-head"><h3>แจ้งเตือนงานกระทบยอด</h3><div class="hint">งานที่มีไฟล์ตั้งต้นแล้ว รอการยิง</div></div>
+      <div id="alertsList"><div class="panel empty-note">กำลังโหลด…</div></div>
+    </section>
+    <section class="view" id="view-receive"><div class="wh3m-host" data-scene="in" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">รับสินค้าเข้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-dispatch"><div class="wh3m-host" data-scene="out" style="height:460px"></div><!-- 3D-MENUS -->
       <div class="live-toolbar">
         <div class="scope-toggle">
           <button class="live-btn active" data-live="dispatch" data-scope-btn="all">All</button>
           <button class="live-btn" data-live="dispatch" data-scope-btn="warehouse">Warehouse</button>
         </div>
         <button class="live-btn" data-live="dispatch" data-action="reset">Reset Filter</button>
+        <button class="live-btn" id="atToggle" type="button"><!-- ARTICLE-TRACE -->ค้นหาตาม Article</button>
         <span style="flex:1"></span>
         <button class="live-btn primary" data-live="dispatch" data-action="export">Export as CSV</button>
+      </div>
+      <!-- ARTICLE-TRACE: Article นี้ไปสาขาไหนบ้าง -->
+      <div class="at-panel" id="atPanel" hidden>
+        <div class="section-head" style="margin-bottom:10px;">
+          <h3>Article นี้จ่ายออกไปสาขาไหนบ้าง</h3>
+          <div class="hint">ยึดวันที่เอกสารเป็นหลัก · ไม่รวมสินค้าคืนคลัง (57702)</div>
+        </div>
+        <div class="at-form">
+          <input type="text" class="live-input" id="atArticle" placeholder="ใส่ Article เช่น 8216133" autocomplete="off">
+          <input type="date" class="live-input" id="atFrom" title="วันที่เอกสาร ตั้งแต่">
+          <input type="date" class="live-input" id="atTo" title="วันที่เอกสาร ถึง">
+          <button class="live-btn primary" id="atSearch" type="button">ค้นหา</button>
+          <button class="live-btn" id="atExport" type="button" disabled>Export CSV</button>
+        </div>
+        <div class="at-quick">
+          <button class="live-btn" type="button" data-at-range="0">วันนี้</button>
+          <button class="live-btn" type="button" data-at-range="7">7 วัน</button>
+          <button class="live-btn" type="button" data-at-range="30">30 วัน</button>
+          <button class="live-btn" type="button" data-at-range="90">90 วัน</button>
+          <button class="live-btn" type="button" data-at-range="365">1 ปี</button>
+        </div>
+        <div id="atResult"><p class="at-msg">ใส่ Article และเลือกช่วงวันที่ แล้วกดค้นหา</p></div>
       </div>
       <div class="live-filters">
         <input type="date" class="live-input" data-live="dispatch" data-filter="dateFrom" title="วันที่เอกสาร ตั้งแต่">
@@ -751,7 +920,7 @@
       </div>
       <div class="foot-note">รายการที่ผู้รับ (receiver) = 57702 (สินค้าคืนคลัง) จะไม่แสดงในหน้านี้ ไปดูได้ที่เมนู "สินค้าคืนคลัง" แทน · ข้อมูลสดจาก MySQL ผ่าน API ภายในวง LAN — ใช้ได้เฉพาะเมื่อเปิดเว็บนี้จากเครื่องในออฟฟิศ (http://&lt;ip เครื่อง&gt;:3001) ถ้าเปิดจากลิงก์ปกติผ่านอินเทอร์เน็ตจะโหลดไม่ได้ · ตารางนี้มีข้อมูลหลักล้านแถว จึงกรองวันที่เป็น "วันนี้" เป็นค่าเริ่มต้นเสมอเพื่อความเร็ว ขยายช่วงวันที่ได้เองแต่จะโหลดช้าลงตามจำนวนแถว</div>
     </section>
-    <section class="view" id="view-transfer">
+    <section class="view" id="view-transfer"><div class="wh3m-host" data-scene="trf" style="height:460px"></div><!-- 3D-MENUS -->
       <div class="live-toolbar">
         <div class="scope-toggle">
           <button class="live-btn active" data-live="transfer" data-scope-btn="all">All</button>
@@ -759,6 +928,8 @@
         </div>
         <button class="live-btn" data-live="transfer" data-action="reset">Reset Filter</button>
         <span style="flex:1"></span>
+        <!-- REGROUP-CHECK: link to the standalone Regroup check page (Index/regroup-check.html) -->
+        <a class="live-btn" href="regroup-check.html" style="text-decoration:none;display:inline-flex;align-items:center;">เช็คตามใบ Regroup</a>
         <button class="live-btn primary" data-live="transfer" data-action="export">Export as CSV</button>
       </div>
       <div class="live-filters">
@@ -795,7 +966,7 @@
       </div>
       <div class="foot-note">ข้อมูลสดจาก MySQL ผ่าน API ภายในวง LAN — ใช้ได้เฉพาะเมื่อเปิดเว็บนี้จากเครื่องในออฟฟิศ (http://&lt;ip เครื่อง&gt;:3001) ถ้าเปิดจากลิงก์ปกติผ่านอินเทอร์เน็ตจะโหลดไม่ได้ · ตารางนี้มีข้อมูลหลักล้านแถว จึงกรองวันที่เป็น "วันนี้" เป็นค่าเริ่มต้นเสมอเพื่อความเร็ว ขยายช่วงวันที่ได้เองแต่จะโหลดช้าลงตามจำนวนแถว</div>
     </section>
-    <section class="view" id="view-return">
+    <section class="view" id="view-return"><div class="wh3m-host" data-scene="ret" style="height:460px"></div><!-- 3D-MENUS -->
       <div class="live-toolbar">
         <div class="scope-toggle">
           <button class="live-btn active" data-live="return" data-scope-btn="all">All</button>
@@ -838,16 +1009,101 @@
       </div>
       <div class="foot-note">แสดงเฉพาะรายการที่ผู้รับ (receiver) = 57702 จากตาราง receiving เท่านั้น (คัดออกจากเมนู "จ่ายสินค้าออก" มาไว้ที่นี่แทน) · ข้อมูลสดจาก MySQL ผ่าน API ภายในวง LAN — ใช้ได้เฉพาะเมื่อเปิดเว็บนี้จากเครื่องในออฟฟิศ (http://&lt;ip เครื่อง&gt;:3001) ถ้าเปิดจากลิงก์ปกติผ่านอินเทอร์เน็ตจะโหลดไม่ได้ · ตารางนี้มีข้อมูลหลักล้านแถว จึงกรองวันที่เป็น "วันนี้" เป็นค่าเริ่มต้นเสมอเพื่อความเร็ว ขยายช่วงวันที่ได้เองแต่จะโหลดช้าลงตามจำนวนแถว</div>
     </section>
+    <section class="view" id="view-shipment"><!-- SHIPMENT-STATUS --><div class="wh3m-host" data-scene="ship" style="height:460px"></div><!-- 3D-MENUS -->
+      <div class="live-toolbar">
+        <button class="live-btn" data-ship-action="reset">Reset Filter</button>
+        <button class="live-btn" data-ship-action="diagnose">ตรวจความพร้อมข้อมูล</button>
+        <span style="flex:1"></span>
+        <button class="live-btn primary" data-ship-action="export">Export as CSV</button>
+      </div>
+      <div class="live-filters">
+        <input type="date" class="live-input" data-ship-filter="dateFrom" title="วันที่ส่ง ตั้งแต่">
+        <input type="date" class="live-input" data-ship-filter="dateTo" title="วันที่ส่ง ถึง">
+        <input type="text" class="live-input" data-ship-filter="sender" placeholder="ผู้ส่ง">
+        <input type="text" class="live-input" data-ship-filter="receiver" placeholder="ผู้รับ">
+        <input type="text" class="live-input" data-ship-filter="invoice" placeholder="เลขที่เอกสาร">
+      </div>
+      <div class="panel ship-diag" id="shipDiag"></div>
+      <div class="ship-kpis" id="shipKpis">
+        <div class="kpi" data-ship-status="onway"><div class="label">กำลังส่ง</div><div class="value num" data-k="count">–</div><div class="delta" data-k="sub"></div></div>
+        <div class="kpi" data-ship-status="partial"><div class="label">รับบางส่วน</div><div class="value num" data-k="count">–</div><div class="delta" data-k="sub"></div></div>
+        <div class="kpi" data-ship-status="over"><div class="label">รับเกิน</div><div class="value num" data-k="count">–</div><div class="delta" data-k="sub"></div></div>
+        <div class="kpi" data-ship-status="complete"><div class="label">รับครบ</div><div class="value num" data-k="count">–</div><div class="delta" data-k="sub"></div></div>
+      </div>
+      <div class="section-head">
+        <h3 id="shipTitle">ทุกสถานะ</h3>
+        <div class="hint">คลิกการ์ดด้านบนเพื่อกรองตามสถานะ คลิกซ้ำเพื่อดูทั้งหมด</div>
+      </div>
+      <div class="panel ship-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>วันที่ส่ง</th><th>ผู้ส่ง</th><th>ผู้รับ</th><th>เลขที่เอกสาร</th>
+              <th class="num">ส่ง (คู่)</th><th class="num">ส่ง (อุปกรณ์)</th>
+              <th class="num">รับ (คู่)</th><th class="num">รับ (อุปกรณ์)</th>
+              <th class="num">ต่าง (คู่)</th><th class="num">ต่าง (อุปกรณ์)</th>
+              <th class="num">ยอดส่ง</th><th>สถานะ</th><th>วันที่รับ / ค้าง</th>
+            </tr>
+          </thead>
+          <tbody id="shipBody"><tr><td colspan="13" class="empty-note">กำลังโหลด…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="live-pager">
+        <span id="shipStatus"></span>
+        <button class="live-btn" data-ship-action="prev">&larr; ก่อนหน้า</button>
+        <button class="live-btn" data-ship-action="next">ถัดไป &rarr;</button>
+      </div>
+      <div class="foot-note">จับคู่ใบส่ง (ตาราง dispatch) กับการรับเข้า (ตาราง receiving) ด้วยเลขที่เอกสาร + ผู้รับ · "ต่าง" = รับ − ส่ง (ติดลบ = ขาด, บวก = เกิน) · ยังไม่แสดงส่วนต่างมูลค่า (รอสูตร DiffTotalAmount จากระบบเก่า) · เลือกช่วงวันที่ส่งได้ไม่เกิน 62 วัน · ข้อมูลสดจาก MySQL ผ่าน API ภายในวง LAN เท่านั้น</div>
+    </section>
     <section class="view" id="view-issue"><div class="panel empty-note">เบิกใช้ภายใน — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-outboundplan"><div class="panel empty-note">วางแผนจ่ายสินค้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-transport"><div class="panel empty-note">การขนส่ง — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-transport"><div class="wh3m-host" data-scene="ship" style="height:460px"></div><!-- 3D-MENUS -->
+      <div class="live-toolbar">
+        <button class="live-btn" id="manifestResetBtn">Reset Filter</button>
+        <span style="flex:1"></span>
+        <button class="live-btn primary" id="manifestExportBtn">Export as CSV</button>
+      </div>
+      <div class="live-filters">
+        <input type="date" class="live-input" data-manifest-filter="dateFrom" title="วันที่ขนส่ง ตั้งแต่">
+        <input type="date" class="live-input" data-manifest-filter="dateTo" title="วันที่ขนส่ง ถึง">
+        <input type="text" class="live-input" data-manifest-filter="store" placeholder="รหัสสาขา">
+        <input type="text" class="live-input" data-manifest-filter="gateNo" placeholder="Gate No.">
+        <input type="text" class="live-input" data-manifest-filter="region" placeholder="Region">
+        <input type="text" class="live-input" data-manifest-filter="invoice" placeholder="Invoice">
+      </div>
+      <div class="section-head">
+        <h3>สรุปยอดรายวัน</h3>
+        <div class="hint">รวมทุก Invoice ในช่วงวันที่ที่เลือก แยกตามวัน</div>
+      </div>
+      <div class="panel" style="margin-bottom:22px;">
+        <table>
+          <thead>
+            <tr><th>วันที่</th><th class="num">จำนวนใบ</th><th class="num">กล่องรวม</th><th class="num">คู่</th><th class="num">อุปกรณ์เสริม</th></tr>
+          </thead>
+          <tbody id="manifestDailyBody"><tr><td colspan="5" class="empty-note">กำลังโหลด…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <table>
+          <thead>
+            <tr><th>วันที่ขนส่ง</th><th>Invoice</th><th>สาขา</th><th>ชื่อสาขา</th><th>Region</th><th>Gate No.</th><th class="num">กล่องรวม</th><th class="num">คู่</th><th class="num">อุปกรณ์เสริม</th></tr>
+          </thead>
+          <tbody id="manifestBody"><tr><td colspan="9" class="empty-note">กำลังโหลด…</td></tr></tbody>
+        </table>
+      </div>
+      <div class="live-pager">
+        <span id="manifestStatus"></span>
+        <button class="live-btn" id="manifestPrevBtn">&larr; ก่อนหน้า</button>
+        <button class="live-btn" id="manifestNextBtn">ถัดไป &rarr;</button>
+      </div>
+    </section>
     <section class="view" id="view-returnocr"><div class="panel empty-note">OCR รับคืนสินค้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-master"><div class="panel empty-note">มาสเตอร์ดาต้า — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
-    <section class="view" id="view-stockcount"><div class="panel empty-note">ตรวจนับสต็อก — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-stockaudit"><div class="panel empty-note">ตรวจสอบสต็อก — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-stockcount"><div class="wh3m-host" data-scene="count" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตรวจนับสต็อก — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-stockaudit"><div class="wh3m-host" data-scene="audit" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตรวจสอบสต็อก — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-recheckscan"><div class="panel empty-note">ยิงรีเช็ค — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-bulklocation"><div class="panel empty-note">ตำแหน่งจัดเก็บ — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-stockonhand"><div class="panel empty-note">สต็อกคงเหลือ — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
+    <section class="view" id="view-bulklocation"><div class="wh3m-host" data-scene="loc" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตำแหน่งจัดเก็บ — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-stockonhand"><div class="wh3m-host" data-scene="stock" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">สต็อกคงเหลือ — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
     <section class="view" id="view-ocrdoc"><div class="panel empty-note">OCR ตรวจเอกสาร — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-reconcile">
       <div class="live-toolbar">
@@ -928,17 +1184,46 @@
     <section class="view" id="view-users">
       <div class="section-head">
         <h3>จัดการผู้ใช้งาน</h3>
-        <div class="hint">กำหนด Role ให้บัญชีที่ถูกสร้างไว้ใน Supabase Auth แล้ว</div>
+        <div class="hint">กำหนด Role และเปิด/ปิดการใช้งานบัญชีที่ถูกสร้างไว้ใน Supabase Auth แล้ว</div>
       </div>
       <div class="panel">
         <table>
-          <thead><tr><th>อีเมล</th><th>ชื่อ</th><th>Role ปัจจุบัน</th><th>เปลี่ยนเป็น</th></tr></thead>
+          <thead><tr><th>อีเมล</th><th>ชื่อ</th><th>Role ปัจจุบัน</th><th>เปลี่ยนเป็น</th><th>สถานะ</th></tr></thead>
           <tbody id="usersBody">
+            <tr><td colspan="5" class="empty-note">กำลังโหลด…</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="foot-note">
+        "ปิดการใช้งาน" บล็อกการเข้าแอปทันที (เช็คตอน login) แต่ไม่ได้ลบบัญชี Supabase Auth จริง —
+        การเพิ่มพนักงานใหม่ยังต้องสร้างบัญชีผ่าน Supabase Dashboard → Authentication ก่อน แล้วค่อยมากำหนด Role ที่นี่
+      </div>
+    </section>
+
+    <!-- ═══════ MENU PERMISSIONS (admin only) ═══════ -->
+    <section class="view" id="view-permissions">
+      <div class="section-head">
+        <h3>จัดการสิทธิ์เมนู</h3>
+        <div class="hint">ติ๊กว่า Role ไหนเห็นเมนูอะไรได้บ้าง — มีผลกับผู้ใช้ตั้งแต่ครั้งถัดไปที่ล็อกอิน/รีเฟรช</div>
+      </div>
+      <div class="panel">
+        <table>
+          <thead>
+            <tr>
+              <th>เมนู</th>
+              <th style="text-align:center;">ผู้ดูแลระบบ</th>
+              <th style="text-align:center;">เจ้าหน้าที่คลังสินค้า</th>
+              <th style="text-align:center;">ผู้บริหาร / ดูรายงาน</th>
+            </tr>
+          </thead>
+          <tbody id="permissionsBody">
             <tr><td colspan="4" class="empty-note">กำลังโหลด…</td></tr>
           </tbody>
         </table>
       </div>
       <div class="foot-note">
+        "จัดการผู้ใช้งาน" และ "จัดการสิทธิ์เมนู" เองไม่อยู่ในตารางนี้ — ล็อกไว้เฉพาะผู้ดูแลระบบเสมอ
+        เพื่อกันไม่ให้ตั้งค่าผิดพลาดจนแอดมินเข้าหน้านี้เองไม่ได้
       </div>
     </section>
 
@@ -961,10 +1246,37 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentRole = null;
 let currentUser = null;
 
+// rolePermissions: null until loaded (falls back to static data-roles for
+// everything); once loaded, a Map of view_key -> Set of allowed roles,
+// populated from the `role_permissions` table so admins can toggle
+// visibility from the "จัดการสิทธิ์เมนู" page instead of editing HTML.
+let rolePermissions = null;
+
+async function loadRolePermissions(){
+  const { data, error } = await sb.from('role_permissions').select('view_key, role, allowed');
+  if (error || !data) { rolePermissions = null; return; }
+  const map = {};
+  data.forEach(row => {
+    if (!map[row.view_key]) map[row.view_key] = new Set();
+    if (row.allowed) map[row.view_key].add(row.role);
+  });
+  rolePermissions = map;
+}
+
 function applyRoleVisibility(role){
   document.querySelectorAll('[data-roles]').forEach(el => {
-    const allowed = el.getAttribute('data-roles').split(',');
-    el.hidden = !allowed.includes(role);
+    const viewKey = el.getAttribute('data-view');
+    const staticAllowed = el.getAttribute('data-roles').split(',');
+    // "users"/"permissions" (and any decorative element with no
+    // data-view, like the sidebar section label) always use the
+    // hard-coded attribute -- never the editable table -- so an admin
+    // can't lock themselves out of the page that controls permissions.
+    const usesDynamicTable = viewKey && rolePermissions && rolePermissions[viewKey]
+      && viewKey !== 'users' && viewKey !== 'permissions';
+    const allowed = usesDynamicTable
+      ? rolePermissions[viewKey].has(role)
+      : staticAllowed.includes(role);
+    el.hidden = !allowed;
   });
 }
 
@@ -1070,7 +1382,7 @@ async function loadLive(view){
   bodyEl.innerHTML = rows.length === 0
     ? '<tr><td colspan="8" class="empty-note">ไม่พบข้อมูล</td></tr>'
     : rows.map(r => `
-      <tr>
+      <tr class="live-row" data-live-view="${view}" data-invoice="${String(r.invoice ?? '').replace(/"/g,'&quot;')}" title="คลิกเพื่อดูรายละเอียดในใบนี้">
         <td>${liveFmtDate(r.bookedDate)}</td>
         <td>${liveFmtDate(r.documentDate)}</td>
         <td>${r.sender ?? '—'}</td>
@@ -1144,6 +1456,201 @@ document.querySelectorAll('[data-live][data-action]').forEach(el => {
   });
 });
 
+// ─── Manifest ("การขนส่ง" / Transport) — backed by Supabase, not MySQL ────
+// Unlike dispatch/transfer/return above (which hit api-server.js -> MySQL
+// directly for up-to-the-second data), manifest data comes from SQL Server
+// IS_Warehouse via a separate, manually-run sync (sync_manifest.py) into
+// Supabase's `manifest` table. It's only as fresh as the last time that
+// script was run by hand -- there's no cron/live API for this one yet.
+// Reuses liveFmtDate/liveFmtNum from the block above.
+const manifestPageSize = 100;
+const manifestState = { page: 1, rows: [], total: 0 };
+
+document.querySelectorAll('[data-manifest-filter="dateFrom"], [data-manifest-filter="dateTo"]').forEach(el => {
+  el.value = liveTodayStr();
+});
+
+function manifestFilters(){
+  const out = {};
+  document.querySelectorAll('[data-manifest-filter]').forEach(el => {
+    const v = el.value.trim();
+    if (v) out[el.getAttribute('data-manifest-filter')] = v;
+  });
+  return out;
+}
+
+function renderManifestDaily(rows){
+  const byDate = {};
+  rows.forEach(r => {
+    const d = (r.manifest_date || '').slice(0, 10);
+    if (!d) return;
+    if (!byDate[d]) byDate[d] = { invoiceCount: 0, cartons: 0, pairs: 0, acc: 0 };
+    byDate[d].invoiceCount += 1;
+    byDate[d].cartons += Number(r.tot_cartons) || 0;
+    byDate[d].pairs += Number(r.final_prs) || 0;
+    byDate[d].acc += Number(r.final_acc) || 0;
+  });
+  const dates = Object.keys(byDate).sort();
+  const el = document.getElementById('manifestDailyBody');
+  el.innerHTML = dates.length === 0
+    ? '<tr><td colspan="5" class="empty-note">ไม่พบข้อมูล</td></tr>'
+    : dates.map(d => `
+      <tr>
+        <td>${liveFmtDate(d)}</td>
+        <td class="num">${liveFmtNum(byDate[d].invoiceCount)}</td>
+        <td class="num">${liveFmtNum(byDate[d].cartons)}</td>
+        <td class="num">${liveFmtNum(byDate[d].pairs)}</td>
+        <td class="num">${liveFmtNum(byDate[d].acc)}</td>
+      </tr>`).join('');
+}
+
+// ─── TRANSPORT-RPC: daily summary summed in Postgres (manifest_daily_summary) ───
+// One RPC call returns one row per day for the whole filter, regardless of
+// how many manifest rows that covers. Cached per filter set, so ถัดไป /
+// ก่อนหน้า (same filters) don't re-query. See manifest-daily-summary.sql.
+let manifestDailyKey = null;
+let manifestDailyHtml = null; // TRANSPORT-RPC-FIX: last rendered summary, redrawn on page change
+
+async function loadManifestDailyAll(filters){
+  const el = document.getElementById('manifestDailyBody');
+  const key = JSON.stringify(filters);
+  if (key === manifestDailyKey && manifestDailyHtml) { el.innerHTML = manifestDailyHtml; return; } // TRANSPORT-RPC-FIX
+  manifestDailyKey = key;
+  manifestDailyHtml = null;
+  el.innerHTML = '<tr><td colspan="5" class="empty-note">กำลังรวมยอด…</td></tr>';
+
+  const { data, error } = await sb.rpc('manifest_daily_summary', {
+    p_date_from: filters.dateFrom || null,
+    p_date_to:   filters.dateTo   || null,
+    p_store:     filters.store    || null,
+    p_gate_no:   filters.gateNo   || null,
+    p_region:    filters.region   || null,
+    p_invoice:   filters.invoice  || null,
+  });
+  if (key !== manifestDailyKey) return;          // filters changed mid-load → newer call wins
+  if (error) {
+    manifestDailyKey = null;                     // allow retry
+    const missing = error.code === 'PGRST202' || /manifest_daily_summary/.test(error.message || '');
+    el.innerHTML = `<tr><td colspan="5" class="empty-note">${missing
+      ? 'ยังไม่ได้สร้างฟังก์ชัน manifest_daily_summary ใน Supabase — รัน manifest-daily-summary.sql ใน SQL Editor ก่อน'
+      : 'รวมยอดไม่สำเร็จ: ' + (error.message || error)}</td></tr>`;
+    return;
+  }
+
+  const days = data || [];
+  const total = { invoice_count: 0, cartons: 0, pairs: 0, acc: 0 };
+  for (const d of days) for (const k of Object.keys(total)) total[k] += Number(d[k]) || 0;
+  const row = (label, v, bold) => `
+    <tr${bold ? ' style="font-weight:600;"' : ''}>
+      <td>${label}</td>
+      <td class="num">${liveFmtNum(v.invoice_count)}</td>
+      <td class="num">${liveFmtNum(v.cartons)}</td>
+      <td class="num">${liveFmtNum(v.pairs)}</td>
+      <td class="num">${liveFmtNum(v.acc)}</td>
+    </tr>`;
+  el.innerHTML = manifestDailyHtml = days.length === 0
+    ? '<tr><td colspan="5" class="empty-note">ไม่พบข้อมูล</td></tr>'
+    : days.map(d => row(liveFmtDate(d.day), d, false)).join('') +
+      (days.length > 1 ? row('รวม', total, true) : '');
+}
+
+async function loadManifest(){
+  const bodyEl = document.getElementById('manifestBody');
+  const dailyBodyEl = document.getElementById('manifestDailyBody');
+  const filters = manifestFilters();
+
+  if (!filters.dateFrom && !filters.dateTo) {
+    bodyEl.innerHTML = '<tr><td colspan="9" class="empty-note">เลือกช่วงวันที่เพื่อดูข้อมูล</td></tr>';
+    dailyBodyEl.innerHTML = '<tr><td colspan="5" class="empty-note">เลือกช่วงวันที่เพื่อดูข้อมูล</td></tr>';
+    manifestState.rows = [];
+    document.getElementById('manifestStatus').textContent = 'หน้า 0/0 — ทั้งหมด 0 invoice';
+    return;
+  }
+
+  bodyEl.innerHTML = '<tr><td colspan="9" class="empty-note">กำลังโหลด…</td></tr>';
+
+  let q = sb.from('manifest').select('*', { count: 'exact' });
+  if (filters.dateFrom) q = q.gte('manifest_date', filters.dateFrom);
+  if (filters.dateTo) q = q.lte('manifest_date', filters.dateTo + 'T23:59:59');
+  if (filters.store) q = q.eq('store', filters.store);
+  if (filters.gateNo) q = q.eq('gate_no', filters.gateNo);
+  if (filters.region) q = q.eq('region', filters.region);
+  if (filters.invoice) q = q.eq('invoice', filters.invoice);
+
+  const from = (manifestState.page - 1) * manifestPageSize;
+  const to = from + manifestPageSize - 1;
+  q = q.order('manifest_date', { ascending: false }).range(from, to);
+
+  const { data, error, count } = await q;
+  if (error) {
+    bodyEl.innerHTML = `<tr><td colspan="9" class="empty-note">โหลดข้อมูลไม่สำเร็จ: ${error.message}</td></tr>`;
+    dailyBodyEl.innerHTML = '<tr><td colspan="5" class="empty-note">โหลดข้อมูลไม่สำเร็จ</td></tr>';
+    document.getElementById('manifestStatus').textContent = '';
+    return;
+  }
+
+  const rows = data || [];
+  manifestState.rows = rows;
+  manifestState.total = count ?? rows.length;
+
+  bodyEl.innerHTML = rows.length === 0
+    ? '<tr><td colspan="9" class="empty-note">ไม่พบข้อมูล</td></tr>'
+    : rows.map(r => `
+      <tr>
+        <td>${liveFmtDate(r.manifest_date)}</td>
+        <td class="mono">${r.invoice ?? '—'}</td>
+        <td>${r.store ?? '—'}</td>
+        <td>${r.store_name ?? '—'}</td>
+        <td>${r.region_name ?? r.region ?? '—'}</td>
+        <td class="mono">${r.gate_no ?? '—'}</td>
+        <td class="num">${liveFmtNum(r.tot_cartons)}</td>
+        <td class="num">${liveFmtNum(r.final_prs)}</td>
+        <td class="num">${liveFmtNum(r.final_acc)}</td>
+      </tr>`).join('');
+
+  // Daily summary covers ALL rows in the filter (summed in Postgres via
+  // manifest_daily_summary), not just this page; cached per filter set.
+  loadManifestDailyAll(filters); // TRANSPORT-TOTALS: sums all rows, not just this page
+
+  const totalPages = Math.max(1, Math.ceil(manifestState.total / manifestPageSize));
+  document.getElementById('manifestStatus').textContent =
+    `หน้า ${manifestState.page}/${totalPages} — ทั้งหมด ${manifestState.total.toLocaleString('th-TH')} invoice`;
+}
+
+function manifestExportCsv(){
+  const rows = manifestState.rows;
+  if (!rows.length) return;
+  const header = ['ManifestDate','Invoice','Store','StoreName','Region','GateNo','BigCarton','SmallCarton','TotCartons','FinalPrs','FinalAcc','TotalFinal'];
+  const lines = [header.join(',')].concat(rows.map(r => [
+    liveFmtDate(r.manifest_date), r.invoice ?? '', r.store ?? '', r.store_name ?? '',
+    r.region_name ?? r.region ?? '', r.gate_no ?? '', r.big_carton ?? 0, r.small_carton ?? 0,
+    r.tot_cartons ?? 0, r.final_prs ?? 0, r.final_acc ?? 0, r.total_final ?? 0,
+  ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')));
+  const blob = new Blob(['\uFEFF' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `manifest-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+document.querySelectorAll('[data-manifest-filter]').forEach(el => {
+  el.addEventListener('change', () => { manifestState.page = 1; loadManifest(); });
+});
+document.getElementById('manifestResetBtn').addEventListener('click', () => {
+  document.querySelectorAll('[data-manifest-filter]').forEach(input => { input.value = ''; });
+  document.querySelectorAll('[data-manifest-filter="dateFrom"], [data-manifest-filter="dateTo"]').forEach(el => { el.value = liveTodayStr(); });
+  manifestState.page = 1;
+  loadManifest();
+});
+document.getElementById('manifestExportBtn').addEventListener('click', manifestExportCsv);
+document.getElementById('manifestPrevBtn').addEventListener('click', () => {
+  if (manifestState.page > 1) { manifestState.page--; loadManifest(); }
+});
+document.getElementById('manifestNextBtn').addEventListener('click', () => {
+  manifestState.page++; loadManifest();
+});
+
 // ─── กระทบยอด (barcode reconcile) — Supabase-only, no MySQL involved ───
 // Matches legacy warehouse-tool behavior reverse-engineered from real
 // T_Reconcile_Base/Scan/Report data: items are matched by Article+Size
@@ -1160,7 +1667,8 @@ function rcIsStaff(){ return currentRole === 'admin' || currentRole === 'warehou
 // [prefix 1][Article 7][pad "0"][Size 3][check digit 1]
 function rcParseBarcode(raw){
   const b = String(raw || '').trim();
-  if (!/^\d{13}$/.test(b)) return null;
+  if (!/^\d{13}$/.test(b)) return null;                 // ไม่ใช่ตัวเลข 13 หลัก
+  if (b[0] !== '2') return { badPrefix: b[0] };         // barcode จริงต้องขึ้นต้นด้วย 2 (กัน Article ผี)
   return { article: b.slice(1, 8), size: b.slice(9, 12) };
 }
 
@@ -1266,8 +1774,10 @@ async function rcHandleScan(raw){
 
   const parsed = rcParseBarcode(raw);
   if (!parsed) { rcSetFeedback('รูปแบบบาร์โค้ดไม่ถูกต้อง (ต้องเป็นตัวเลข 13 หลัก): ' + raw, false); return; }
+  if (parsed.badPrefix) { rcSetFeedback('ยิงตก — บาร์โค้ดต้องขึ้นต้นด้วย 2 (ยิงได้ ' + parsed.badPrefix + '): ' + raw, false); return; }
 
-  const { article, size } = parsed;
+  const article = parsed.article;
+  let size = parsed.size;
   const itemsForArticle = rcState.items.filter(i => i.article === article);
   let result = 'ตรง', reason = null, qty = 1, cat = null, remark = null;
 
@@ -1275,11 +1785,21 @@ async function rcHandleScan(raw){
     result = 'ไม่ตรง'; qty = 0;
     reason = `ไม่พบ Article ${article} ในไฟล์ตั้งต้น`;
   } else {
-    const item = itemsForArticle.find(i => i.size === size);
+    let item = itemsForArticle.find(i => i.size === size);
+    let corrected = null;
+    // แก้ size ที่อ่านเลื่อน เช่น 800→080, 700→070 เมื่อไฟล์ตั้งต้นมีไซส์นั้นจริง
+    if (!item) {
+      const m = size.match(/^(\d)00$/);
+      if (m) {
+        const alt = '0' + m[1] + '0';
+        const altItem = itemsForArticle.find(i => i.size === alt);
+        if (altItem) { item = altItem; corrected = size + '→' + alt; size = alt; }
+      }
+    }
     if (!item) {
       result = 'ไม่ตรง'; qty = 0;
       const sizes = [...new Set(itemsForArticle.map(i => i.size))].sort().join(', ');
-      reason = `Size ไม่ตรง: ยิง ${size} / ตั้งต้นมี ${sizes}`;
+      reason = `Size ไม่ตรง: ยิง ${parsed.size} / ตั้งต้นมี ${sizes}`;
     } else {
       cat = item.cat; remark = item.remark;
       const acceptedSoFar = rcState.scans
@@ -1288,6 +1808,8 @@ async function rcHandleScan(raw){
       if (acceptedSoFar >= item.qty_expected) {
         result = 'ไม่ตรง'; qty = 0;
         reason = `รายการนี้ยิงครบจำนวนตามไฟล์ตั้งต้นแล้ว ${acceptedSoFar}/${item.qty_expected} ไม่รับชิ้นเกิน`;
+      } else if (corrected) {
+        reason = `แก้ size อัตโนมัติ ${corrected}`;
       }
     }
   }
@@ -1300,7 +1822,12 @@ async function rcHandleScan(raw){
   if (error) { rcSetFeedback('บันทึกการยิงไม่สำเร็จ: ' + error.message, false); return; }
 
   rcState.scans.push(inserted);
-  rcSetFeedback(result === 'ตรง' ? `ตรง — Article ${article} / Size ${size}` : `ไม่ตรง — ${reason}`, result === 'ตรง');
+  rcSetFeedback(
+    result === 'ตรง'
+      ? (reason ? `ตรง (${reason}) — Article ${article} / Size ${size}` : `ตรง — Article ${article} / Size ${size}`)
+      : `ไม่ตรง — ${reason}`,
+    result === 'ตรง'
+  );
   rcRenderBatchPanel();
 }
 
@@ -1462,19 +1989,333 @@ document.getElementById('rcCloseBatchBtn').addEventListener('click', async () =>
   rcState.batch.status = 'closed';
   rcState.batch.closed_at = closedAt;
   rcRenderBatchPanel();
+  if (typeof refreshAlertsBadge === 'function') refreshAlertsBadge();
 });
+
+// ─── Alerts / Notifications (งานกระทบยอดที่รอยิง) ──────────
+function alEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function alSeenKey(){return 'bata_alerts_seen_'+(currentUser&&currentUser.id?currentUser.id:'anon');}
+function alGetSeen(){try{return new Set(JSON.parse(localStorage.getItem(alSeenKey())||'[]'));}catch(e){return new Set();}}
+function alSetSeen(set){try{localStorage.setItem(alSeenKey(),JSON.stringify([...set]));}catch(e){}}
+let alertsCache = [];
+async function fetchOpenBatches(){
+  const { data, error } = await sb.from('reconcile_batches').select('*');
+  if (error) { console.warn('alerts query error', error); return []; }
+  const rows = (data||[]).filter(b => b.status !== 'closed' && b.source_filename);
+  rows.sort((a,b)=> String(b.created_at||'').localeCompare(String(a.created_at||'')));
+  return rows;
+}
+async function refreshAlertsBadge(){
+  const badge = document.getElementById('alertsBadge');
+  if (!badge) return;
+  alertsCache = await fetchOpenBatches();
+  const n = alertsCache.length;
+  if (n > 0){ badge.textContent = n > 99 ? '99+' : String(n); badge.hidden = false; }
+  else { badge.hidden = true; }
+}
+function loadAlerts(){
+  const host = document.getElementById('alertsList');
+  if (!host) return;
+  const rows = alertsCache;
+  if (!rows.length){ host.innerHTML = '<div class="panel empty-note">ไม่มีงานกระทบยอดค้างอยู่</div>'; }
+  else {
+    host.innerHTML = '<div class="panel"><table><thead><tr>'+
+      '<th>รอบงาน</th><th>ไฟล์ตั้งต้น</th><th>สถานะ</th><th></th></tr></thead><tbody>'+
+      rows.map(b => '<tr><td class="mono">'+alEsc(b.batch_code)+' <span class="pill-new">รอยิง</span></td>'+
+        '<td>'+alEsc(b.source_filename||'—')+'</td>'+
+        '<td>พร้อมยิง</td>'+
+        '<td><button class="live-btn primary" data-goto="'+alEsc(b.batch_code)+'">ไปยิงรอบนี้</button></td></tr>').join('')+
+      '</tbody></table></div>';
+  }
+  refreshAlertsBadge();
+}
+document.addEventListener('click', e => {
+  const g = e.target.closest('[data-goto]');
+  if (!g) return;
+  const code = g.getAttribute('data-goto');
+  const inp = document.getElementById('rcBatchCodeInput');
+  if (inp) inp.value = code;
+  showView('reconcile');
+  rcLoadOrCreateBatch();
+});
+
+// ─── Live table row detail (คลิกแถวดูรายละเอียดในใบ) ──────────
+function ldEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+async function openLiveDetail(view, invoice){
+  const dlg = document.getElementById('liveDetailDlg');
+  document.getElementById('ldTitle').textContent = 'รายละเอียดใบ (แยกตามไซส์) ' + invoice;
+  document.getElementById('ldSub').textContent = '';
+  document.getElementById('ldBody').innerHTML = '<div class="empty-note">กำลังโหลด…</div>';
+  if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open','');
+  const table = LIVE_TABLE[view];
+  try {
+    const res = await fetch(`/api/${table}/detail?invoice=${encodeURIComponent(invoice)}`);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    renderLiveDetail(invoice, data.rows || []);
+  } catch (err) {
+    document.getElementById('ldBody').innerHTML =
+      '<div class="empty-note">โหลดรายละเอียดไม่สำเร็จ — หน้านี้ใช้ได้เฉพาะเมื่อเปิดจากในวง LAN (' + ldEsc(err.message) + ')</div>';
+  }
+}
+function renderLiveDetail(invoice, rows){
+  const body = document.getElementById('ldBody');
+  const sub = document.getElementById('ldSub');
+  if (!rows.length){ body.innerHTML = '<div class="empty-note">ไม่พบรายการในใบนี้</div>'; return; }
+  const first = rows[0];
+  const info = [];
+  if (first.documentDate != null) info.push('วันที่เอกสาร ' + liveFmtDate(first.documentDate));
+  if (first.sender != null) info.push('ผู้ส่ง ' + ldEsc(first.sender));
+  if (first.receiver != null) info.push('ผู้รับ ' + ldEsc(first.receiver));
+
+  const norm = s => String(s==null?'':s).trim();
+  const isRealSize = s => s !== '' && s !== '0' && s !== '00' && s !== '000';
+
+  // รวมเป็น 1 แถวต่อ article, กระจายจำนวนตามไซส์
+  const byArt = new Map();
+  const sizeSet = new Set();
+  rows.forEach(r => {
+    const art = norm(r.article) || '—';
+    const size = norm(r.size);
+    const qty = Number(r.items ?? r.qty ?? 0) || 0;
+    const amt = Number(r.amount ?? 0) || 0;
+    if (!byArt.has(art)) byArt.set(art, { article: art, sizes:{}, qty:0, amount:0, price: Number(r.price ?? 0)||0, foot: (r.isFootware==1||r.isFootware==='1') });
+    const a = byArt.get(art);
+    a.qty += qty; a.amount += amt;
+    if (!a.price) a.price = Number(r.price ?? 0)||0;
+    if (isRealSize(size)) { a.sizes[size] = (a.sizes[size]||0) + qty; sizeSet.add(size); }
+  });
+  const sizes = [...sizeSet].sort((x,y)=> Number(x)-Number(y));
+  const arts = [...byArt.values()].sort((a,b)=> a.article.localeCompare(b.article));
+
+  const totQty = arts.reduce((s,a)=>s+a.qty,0);
+  const totAmt = arts.reduce((s,a)=>s+a.amount,0);
+  sub.innerHTML = info.join('  ·  ') + '  ·  ' + arts.length + ' article · รวม ' + liveFmtNum(totQty) + ' ชิ้น';
+
+  const head = '<th>Article</th>' + sizes.map(s=>`<th class="num">${ldEsc(s)}</th>`).join('') +
+    '<th class="num">จำนวน</th><th class="num">ราคา/คู่</th><th class="num">ยอดเงิน</th>';
+  const bodyRows = arts.map(a => {
+    const cells = sizes.map(s => `<td class="num sz">${a.sizes[s] ? liveFmtNum(a.sizes[s]) : ''}</td>`).join('');
+    return '<tr><td class="mono">'+ldEsc(a.article)+'</td>'+cells+
+      '<td class="num">'+liveFmtNum(a.qty)+'</td>'+
+      '<td class="num">'+(a.price?liveFmtNum(a.price):'—')+'</td>'+
+      '<td class="num">'+liveFmtNum(a.amount)+'</td></tr>';
+  }).join('');
+  const foot = '<tr class="ld-foot"><td>รวม</td>'+ sizes.map(()=>'<td></td>').join('') +
+    '<td class="num">'+liveFmtNum(totQty)+'</td><td></td><td class="num">'+liveFmtNum(totAmt)+'</td></tr>';
+
+  body.innerHTML = '<div class="panel ld-matrix"><table><thead><tr>'+head+'</tr></thead><tbody>'+bodyRows+foot+'</tbody></table></div>';
+}
+
+document.addEventListener('click', e => {
+  const row = e.target.closest('.live-row[data-invoice]');
+  if (row) { openLiveDetail(row.getAttribute('data-live-view'), row.getAttribute('data-invoice')); return; }
+  if (e.target.closest('#ldClose')) { const d=document.getElementById('liveDetailDlg'); if(d) d.close(); return; }
+  const dlg = document.getElementById('liveDetailDlg');
+  if (dlg && dlg.open && e.target === dlg) dlg.close();
+});
+
+// ─── SHIPMENT-STATUS: สถานะการส่งของ (Goods on Way + Goods Received) ───
+// Uses its own data-ship-* attributes on purpose: the generic data-live
+// handlers above would call loadLive() with a view that has no LIVE_TABLE
+// entry. Backed by GET /api/shipment-status (shipment-status.js).
+const shipState = { page: 1, status: '', rows: [], loaded: false };
+const SHIP_PAGE_SIZE = 100;
+const SHIP_TAG = { onway: 'ship-onway', partial: 'out', over: 'wait', complete: 'in' };
+const SHIP_TITLE = { '': 'ทุกสถานะ', onway: 'กำลังส่ง', partial: 'รับบางส่วน', over: 'รับเกิน', complete: 'รับครบ' };
+
+function shipEsc(v){ return String(v ?? '').replace(/[&<>"]/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;' }[c])); }
+function shipDateStr(d){ return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10); }
+function shipSetDefaultDates(){
+  const to = new Date(), from = new Date(); from.setDate(from.getDate() - 7);
+  document.querySelector('[data-ship-filter="dateFrom"]').value = shipDateStr(from);
+  document.querySelector('[data-ship-filter="dateTo"]').value = shipDateStr(to);
+}
+function shipFilters(){
+  const out = { page: shipState.page, pageSize: SHIP_PAGE_SIZE };
+  if (shipState.status) out.status = shipState.status;
+  document.querySelectorAll('[data-ship-filter]').forEach(el => {
+    const v = el.value.trim();
+    if (v) out[el.getAttribute('data-ship-filter')] = v;
+  });
+  return out;
+}
+function shipDiff(v){
+  if (v === null || v === undefined) return '—';
+  const n = Number(v);
+  if (n === 0) return '0';
+  return `<span class="${n < 0 ? 'ship-neg' : 'ship-pos'}">${n > 0 ? '+' : ''}${liveFmtNum(n)}</span>`;
+}
+function shipWhen(r){
+  if (r.status === 'onway') {
+    const d = Number(r.daysOpen) || 0;
+    return `<span class="${d >= 7 ? 'ship-old' : ''}">ค้าง ${d} วัน</span>`;
+  }
+  const first = liveFmtDate(r.firstReceived);
+  return r.receiveCount > 1 ? `${first} <span class="ship-pos">(รับ ${r.receiveCount} ครั้ง)</span>` : first;
+}
+
+async function loadShipment(){
+  const bodyEl = document.getElementById('shipBody');
+  const statusEl = document.getElementById('shipStatus');
+  const f = shipFilters();
+  document.getElementById('shipTitle').textContent = SHIP_TITLE[shipState.status];
+  document.querySelectorAll('#shipKpis .kpi').forEach(k =>
+    k.classList.toggle('active', k.getAttribute('data-ship-status') === shipState.status));
+
+  if (!f.dateFrom || !f.dateTo) {
+    bodyEl.innerHTML = '<tr><td colspan="13" class="empty-note">เลือกช่วงวันที่ส่ง (ตั้งแต่–ถึง) เพื่อดูข้อมูล</td></tr>';
+    statusEl.textContent = '';
+    return;
+  }
+  bodyEl.innerHTML = '<tr><td colspan="13" class="empty-note">กำลังโหลด…</td></tr>';
+
+  let data;
+  try {
+    const res = await fetch('/api/shipment-status?' + new URLSearchParams(Object.entries(f)).toString());
+    data = await res.json();
+    if (!res.ok) throw new Error(data.error || ('HTTP ' + res.status));
+  } catch (err) {
+    bodyEl.innerHTML = `<tr><td colspan="13" class="empty-note">โหลดข้อมูลไม่สำเร็จ — ${shipEsc(err.message)} (หน้านี้ใช้ได้เฉพาะเมื่อเปิดจากในวง LAN)</td></tr>`;
+    statusEl.textContent = '';
+    return;
+  }
+
+  shipState.rows = data.rows || [];
+  shipState.loaded = true;
+
+  for (const [st, s] of Object.entries(data.summary || {})) {
+    const card = document.querySelector(`#shipKpis [data-ship-status="${st}"]`);
+    if (!card) continue;
+    card.querySelector('[data-k="count"]').textContent = liveFmtNum(s.count);
+    card.querySelector('[data-k="sub"]').textContent = `${liveFmtNum(s.pair)} คู่ · ${liveFmtNum(s.accessories)} อุปกรณ์`;
+  }
+
+  bodyEl.innerHTML = shipState.rows.length === 0
+    ? '<tr><td colspan="13" class="empty-note">ไม่พบข้อมูล</td></tr>'
+    : shipState.rows.map(r => `
+      <tr>
+        <td>${liveFmtDate(r.documentDate)}</td>
+        <td>${shipEsc(r.sender) || '—'}</td>
+        <td>${shipEsc(r.receiver) || '—'}</td>
+        <td class="mono">${shipEsc(r.invoice) || '—'}</td>
+        <td class="num">${liveFmtNum(r.pair)}</td>
+        <td class="num">${liveFmtNum(r.accessories)}</td>
+        <td class="num">${r.rcvPair === null ? '—' : liveFmtNum(r.rcvPair)}</td>
+        <td class="num">${r.rcvAccessories === null ? '—' : liveFmtNum(r.rcvAccessories)}</td>
+        <td class="num">${shipDiff(r.diffPair)}</td>
+        <td class="num">${shipDiff(r.diffAccessories)}</td>
+        <td class="num">${liveFmtNum(r.totalAmount)}</td>
+        <td><span class="tag ${SHIP_TAG[r.status] || ''}">${shipEsc(r.statusLabel)}</span></td>
+        <td>${shipWhen(r)}</td>
+      </tr>`).join('');
+
+  const total = data.total || 0;
+  const pages = Math.max(1, Math.ceil(total / SHIP_PAGE_SIZE));
+  statusEl.textContent = `หน้า ${shipState.page}/${pages} — ${total.toLocaleString('th-TH')} ใบ` +
+    (data.truncated ? ' · ข้อมูลเกิน 20,000 ใบ แสดงไม่ครบ กรุณาลดช่วงวันที่' : '') +
+    (data.matchKey === 'invoice' ? ' · จับคู่ด้วยเลขที่เอกสารอย่างเดียว' : '');
+}
+
+function shipExportCsv(){
+  const rows = shipState.rows;
+  if (!rows.length) return;
+  const header = ['DocumentDate','Sender','Receiver','Invoice','SentPair','SentAccessories','RcvPair','RcvAccessories','DiffPair','DiffAccessories','TotalAmount','Status','FirstReceived','ReceiveCount','DaysOpen'];
+  const lines = [header.join(',')].concat(rows.map(r => [
+    liveFmtDate(r.documentDate), r.sender ?? '', r.receiver ?? '', r.invoice ?? '',
+    r.pair ?? 0, r.accessories ?? 0, r.rcvPair ?? '', r.rcvAccessories ?? '',
+    r.diffPair ?? '', r.diffAccessories ?? '', r.totalAmount ?? 0, r.statusLabel ?? '',
+    r.firstReceived ? liveFmtDate(r.firstReceived) : '', r.receiveCount ?? 0, r.daysOpen ?? '',
+  ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(',')));
+  const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `shipment-status-${shipState.status || 'all'}-${shipDateStr(new Date())}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+async function shipDiagnose(){
+  const el = document.getElementById('shipDiag');
+  el.classList.add('show');
+  el.innerHTML = 'กำลังตรวจข้อมูล… (อาจใช้เวลาสักครู่ เพราะต้องนับข้อมูลย้อนหลัง 60 วัน)';
+  try {
+    const res = await fetch('/api/shipment-status/diagnose');
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error || ('HTTP ' + res.status));
+    const list = arr => (arr || []).map(s => `${shipEsc(s.sender)} (${liveFmtNum(s.invoices)})`).join(', ') || '—';
+    const m = d.matchRate || {};
+    const hasIdx = t => (d.indexes[t] || []).includes('invoice') ? 'มี' : '<span class="ship-neg">ไม่มี — join จะช้า</span>';
+    let verdict = 'ข้อมูลน้อยเกินไปที่จะสรุป';
+    if (m.total) {
+      if (m.invoiceReceiverPct >= 90) verdict = 'จับคู่ด้วยเลขที่เอกสาร + ผู้รับ ได้ดี ใช้ค่าปัจจุบันได้';
+      else if (m.invoicePct >= 90) verdict = 'จับคู่ด้วยเลขที่เอกสารได้ แต่ผู้รับไม่ตรงกันหลายใบ — ควรพิจารณาตั้ง SHIP_MATCH_KEY=invoice ใน .env';
+      else verdict = 'จับคู่ได้น้อย — ฝั่งส่งของบางกลุ่ม (เช่น คลัง) อาจไม่ได้อยู่ในตาราง dispatch ต้องตรวจเพิ่ม';
+    }
+    el.innerHTML = `
+      <h4>ผลตรวจความพร้อมข้อมูล</h4>
+      <div>อัตราจับคู่ (${shipEsc(m.window)}, ${liveFmtNum(m.total)} ใบ): เลขที่เอกสาร <b>${m.invoicePct ?? '—'}%</b> · เลขที่เอกสาร + ผู้รับ <b>${m.invoiceReceiverPct ?? '—'}%</b> — ${verdict}</div>
+      <div>Index คอลัมน์ invoice: dispatch ${hasIdx('dispatch')} · receiving ${hasIdx('receiving')}</div>
+      <div class="cols" style="margin-top:6px;">
+        <div><b>ผู้ส่งหลักใน dispatch (30 วัน)</b><br>${list(d.topSenders.dispatch)}</div>
+        <div><b>ผู้ส่งหลักใน receiving (30 วัน)</b><br>${list(d.topSenders.receiving)}</div>
+      </div>
+      <div style="margin-top:6px; color:var(--ink-soft);">ถ้ารหัสคลังโผล่ในฝั่ง receiving แต่ไม่โผล่ใน dispatch แปลว่าของที่คลังส่งออกจะไม่อยู่ในหน้านี้ (ต้องใช้ manifest เป็นฝั่งส่งแทน)</div>`;
+  } catch (err) {
+    el.innerHTML = `ตรวจไม่สำเร็จ — ${shipEsc(err.message)}`;
+  }
+}
+
+document.querySelectorAll('[data-ship-filter]').forEach(el =>
+  el.addEventListener('change', () => { shipState.page = 1; loadShipment(); }));
+document.querySelectorAll('#shipKpis .kpi').forEach(el =>
+  el.addEventListener('click', () => {
+    const st = el.getAttribute('data-ship-status');
+    shipState.status = shipState.status === st ? '' : st;
+    shipState.page = 1;
+    loadShipment();
+  }));
+document.querySelectorAll('[data-ship-action]').forEach(el =>
+  el.addEventListener('click', () => {
+    const a = el.getAttribute('data-ship-action');
+    if (a === 'reset') {
+      document.querySelectorAll('[data-ship-filter]').forEach(i => { i.value = ''; });
+      shipSetDefaultDates();
+      shipState.status = ''; shipState.page = 1; loadShipment();
+    } else if (a === 'export') shipExportCsv();
+    else if (a === 'diagnose') shipDiagnose();
+    else if (a === 'prev') { if (shipState.page > 1) { shipState.page--; loadShipment(); } }
+    else if (a === 'next') { shipState.page++; loadShipment(); }
+  }));
+shipSetDefaultDates();
 
 // ─── View switching ───────────────────────────────────────
 function showView(name){
+  if (name === 'dashboard') name = 'home'; // 3D-WAREHOUSE: แดชบอร์ด opens the 3D overview
   document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
   document.querySelectorAll('.nav-item[data-view]').forEach(n => n.classList.remove('active'));
   const target = document.getElementById('view-' + name);
   if (target) target.classList.add('active');
   document.querySelectorAll('.nav-item[data-view="' + name + '"]').forEach(n => n.classList.add('active'));
   if (name === 'users') loadUsers();
+  if (name === 'permissions') loadPermissions();
   if (name === 'dispatch') loadLive('dispatch');
   if (name === 'transfer') loadLive('transfer');
   if (name === 'return') loadLive('return');
+  if (name === 'shipment' && !shipState.loaded) loadShipment(); // SHIPMENT-STATUS
+  if (name === 'transport') loadManifest();
+  if (name === 'alerts') loadAlerts();
+  if (window.wh3d) window.wh3d.suspend(name !== 'home'); // 3D-WAREHOUSE
+  document.body.classList.toggle('wh3d-home', name === 'home');
+  // 3D-MENUS: one shared 3D view that moves into the open menu
+  if (window.BataMenus3D) {
+    var wh3mHost = document.querySelector('#view-' + name + ' .wh3m-host');
+    if (wh3mHost) {
+      if (wh3mHost.dataset.full) wh3mHost.style.height = Math.max(480, window.innerHeight - wh3mHost.getBoundingClientRect().top - 20) + 'px';
+      try { BataMenus3D.show(wh3mHost.dataset.scene, wh3mHost, wh3mCards(wh3mHost.dataset.scene)); } catch (e) { console.error('3D menus', e); }
+    } else { BataMenus3D.hide(); }
+  }
+  if (name === 'home') { document.querySelectorAll('.nav-item[data-view="dashboard"]').forEach(n => n.classList.add('active')); if (window.wh3dFit) window.wh3dFit(); }
 }
 
 document.addEventListener('click', (e) => {
@@ -1524,13 +2365,20 @@ async function onSignedIn(){
 
   const { data: profile, error } = await sb
     .from('profiles')
-    .select('role, full_name, email')
+    .select('role, full_name, email, is_active')
     .eq('id', user.id)
     .single();
 
   if (error || !profile) {
     document.getElementById('loginError').textContent =
       'เข้าสู่ระบบสำเร็จ แต่ยังไม่มี Role กำหนดไว้ — ติดต่อ Admin ให้ตั้งค่าบัญชีนี้';
+    return;
+  }
+
+  if (profile.is_active === false) {
+    document.getElementById('loginError').textContent =
+      'บัญชีนี้ถูกปิดการใช้งานแล้ว — ติดต่อ Admin หากคิดว่าไม่ถูกต้อง';
+    await sb.auth.signOut();
     return;
   }
 
@@ -1544,8 +2392,11 @@ async function onSignedIn(){
   document.getElementById('whoRole').textContent = roleLabel(currentRole);
   document.getElementById('whoAvatar').textContent = displayName.slice(0,2).toUpperCase();
 
+  await loadRolePermissions();
   applyRoleVisibility(currentRole);
   loadHomeData();
+  refreshAlertsBadge();
+  if (!window._alertPoll) window._alertPoll = setInterval(refreshAlertsBadge, 60000);
 }
 
 // ─── Home KPIs: live from Supabase (for the date picked in homeDateFilter) ─
@@ -1618,6 +2469,23 @@ async function loadHomeData(){
         <td class="mono">${liveFmtDate(r.document_date)}</td>
       </tr>`).join('');
   }
+
+  // 3D-WAREHOUSE: show the KPI numbers inside the 3D view
+  try {
+    const byInv = new Map();
+    dispatchRows.forEach(r => {
+      const k = r.invoice || ''; if (!k) return;
+      const g = byInv.get(k) || { doc: k, branch: r.receiver || '—', qty: 0, type: 'จ่ายออก' };
+      g.qty += Number(r.items) || 0; byInv.set(k, g);
+    });
+    document.getElementById('wh3dDispatch').textContent = (dispatchRes.count ?? dispatchRows.length).toLocaleString('th-TH');
+    document.getElementById('wh3dReceiving').textContent = (receivingRes.count ?? receivingRows.length).toLocaleString('th-TH');
+    document.getElementById('wh3dAmount').textContent = totalAmount.toLocaleString('th-TH', { maximumFractionDigits: 0 });
+    document.getElementById('wh3dSynced').textContent = document.getElementById('kpiSyncedAt').textContent;
+    const wh3dData = { siteName: 'คลังสินค้ากลาง บางนา', recentDocs: [...byInv.values()].slice(0, 4) };
+    window._wh3dPending = wh3dData;
+    if (window.wh3d) window.wh3d.setData(wh3dData);
+  } catch (e) { console.warn('3D warehouse data', e); }
 }
 
 document.getElementById('homeDateFilter').value = homeTodayStr();
@@ -1626,25 +2494,36 @@ document.getElementById('homeDateFilter').addEventListener('change', loadHomeDat
 // ─── Admin: user/role management ─────────────────────────
 async function loadUsers(){
   if (currentRole !== 'admin') return;
-  const { data, error } = await sb.from('profiles').select('id, email, full_name, role').order('email');
+  const { data, error } = await sb.from('profiles').select('id, email, full_name, role, is_active').order('email');
   const tbody = document.getElementById('usersBody');
   if (error) {
-    tbody.innerHTML = '<tr><td colspan="4" class="empty-note">โหลดรายชื่อผู้ใช้ไม่สำเร็จ</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-note">โหลดรายชื่อผู้ใช้ไม่สำเร็จ</td></tr>';
     return;
   }
-  tbody.innerHTML = (data || []).map(u => `
+  tbody.innerHTML = (data || []).map(u => {
+    const isSelf = u.id === currentUser?.id;
+    const active = u.is_active !== false;
+    return `
     <tr>
       <td>${u.email || '—'}</td>
       <td>${u.full_name || '—'}</td>
       <td>${roleLabel(u.role)}</td>
       <td>
-        <select class="role-select" data-user-id="${u.id}">
+        <select class="role-select" data-user-id="${u.id}" ${isSelf ? 'disabled title="เปลี่ยน Role ตัวเองไม่ได้"' : ''}>
           <option value="admin" ${u.role==='admin'?'selected':''}>ผู้ดูแลระบบ</option>
           <option value="warehouse_staff" ${u.role==='warehouse_staff'?'selected':''}>เจ้าหน้าที่คลังสินค้า</option>
           <option value="viewer" ${u.role==='viewer'?'selected':''}>ผู้บริหาร / ดูรายงาน</option>
         </select>
       </td>
-    </tr>`).join('');
+      <td>
+        <label style="display:flex; align-items:center; gap:6px; cursor:${isSelf ? 'default' : 'pointer'};">
+          <input type="checkbox" class="active-toggle" data-user-id="${u.id}"
+            ${active ? 'checked' : ''} ${isSelf ? 'disabled title="ปิดบัญชีตัวเองไม่ได้"' : ''}>
+          <span>${active ? 'ใช้งานอยู่' : 'ปิดการใช้งาน'}</span>
+        </label>
+      </td>
+    </tr>`;
+  }).join('');
 
   tbody.querySelectorAll('.role-select').forEach(sel => {
     sel.addEventListener('change', async (e) => {
@@ -1654,12 +2533,494 @@ async function loadUsers(){
       if (error) alert('เปลี่ยน Role ไม่สำเร็จ: ' + error.message);
     });
   });
+
+  tbody.querySelectorAll('.active-toggle').forEach(chk => {
+    chk.addEventListener('change', async (e) => {
+      const userId = e.target.getAttribute('data-user-id');
+      const isActive = e.target.checked;
+      const { error } = await sb.from('profiles').update({ is_active: isActive }).eq('id', userId);
+      if (error) {
+        alert('เปลี่ยนสถานะไม่สำเร็จ: ' + error.message);
+        e.target.checked = !isActive; // revert the checkbox on failure
+        return;
+      }
+      loadUsers(); // re-render so the label text (ใช้งานอยู่/ปิดการใช้งาน) updates
+    });
+  });
+}
+
+// ─── Admin: menu permission matrix ────────────────────────
+// The same 22 views listed in the sidebar/shortcuts, with their Thai
+// labels, excluding "users"/"permissions" which are permanently
+// admin-only (see applyRoleVisibility).
+const PERMISSION_VIEWS = [
+  ['home', 'หน้าหลัก'], ['dashboard', 'แดชบอร์ด'], ['reports', 'รายงานบริหาร'], ['alerts', 'แจ้งเตือน'],
+  ['receive', 'รับสินค้าเข้า'], ['dispatch', 'จ่ายสินค้าออก'], ['transfer', 'โอนสินค้าระหว่างคลัง'],
+  ['return', 'สินค้าคืนคลัง'], ['issue', 'เบิกใช้ภายใน'], ['outboundplan', 'วางแผนจ่ายสินค้า'],
+  ['transport', 'การขนส่ง'], ['returnocr', 'OCR รับคืนสินค้า'], ['master', 'มาสเตอร์ดาต้า'],
+  ['stockcount', 'ตรวจนับสต็อก'], ['stockaudit', 'ตรวจสอบสต็อก'], ['recheckscan', 'ยิงรีเช็ค'],
+  ['bulklocation', 'ตำแหน่งจัดเก็บ'], ['stockonhand', 'สต็อกคงเหลือ'], ['ocrdoc', 'OCR ตรวจเอกสาร'],
+  ['reconcile', 'กระทบยอด'], ['stockmovement', 'ความเคลื่อนไหวสต็อก'], ['history', 'ประวัติเอกสาร'],
+];
+const PERMISSION_ROLES = ['admin', 'warehouse_staff', 'viewer'];
+
+async function loadPermissions(){
+  if (currentRole !== 'admin') return;
+  const tbody = document.getElementById('permissionsBody');
+  tbody.innerHTML = '<tr><td colspan="4" class="empty-note">กำลังโหลด…</td></tr>';
+
+  const { data, error } = await sb.from('role_permissions').select('view_key, role, allowed');
+  if (error) {
+    tbody.innerHTML = `<tr><td colspan="4" class="empty-note">โหลดไม่สำเร็จ: ${error.message}</td></tr>`;
+    return;
+  }
+  const current = {}; // "viewKey:role" -> allowed
+  (data || []).forEach(row => { current[`${row.view_key}:${row.role}`] = row.allowed; });
+
+  tbody.innerHTML = PERMISSION_VIEWS.map(([viewKey, label]) => `
+    <tr>
+      <td>${label}</td>
+      ${PERMISSION_ROLES.map(role => {
+        const key = `${viewKey}:${role}`;
+        const checked = current[key] !== undefined ? current[key] : (role === 'admin');
+        return `<td style="text-align:center;"><input type="checkbox" class="perm-toggle"
+          data-view-key="${viewKey}" data-role="${role}" ${checked ? 'checked' : ''}></td>`;
+      }).join('')}
+    </tr>`).join('');
+
+  tbody.querySelectorAll('.perm-toggle').forEach(chk => {
+    chk.addEventListener('change', async (e) => {
+      const viewKey = e.target.getAttribute('data-view-key');
+      const role = e.target.getAttribute('data-role');
+      const allowed = e.target.checked;
+      const { error: upsertErr } = await sb.from('role_permissions')
+        .upsert({ view_key: viewKey, role, allowed }, { onConflict: 'view_key,role' });
+      if (upsertErr) {
+        alert('บันทึกไม่สำเร็จ: ' + upsertErr.message);
+        e.target.checked = !allowed;
+        return;
+      }
+      // Refresh this session's own permission map too, in case the admin
+      // just changed a view they themselves rely on.
+      await loadRolePermissions();
+      applyRoleVisibility(currentRole);
+    });
+  });
 }
 
 // ─── Boot: restore session if already logged in ──────────────
 (async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (session) await onSignedIn();
+})();
+
+// ─── ARTICLE-TRACE v6: ค้นหาตาม Article (จ่ายสินค้าออก) ─────────────────────
+// Which branches (receiver) an article was dispatched to within a date
+// range, plus its dispatch history. Backed by /api/article-trace in
+// api-server.js (article-trace.js) — same receiving-minus-57702 data as
+// the rest of this menu, LAN-only like the other live views.
+(function(){
+  const $ = id => document.getElementById(id);
+  if (!$('atPanel')) return;
+  const st = { data: null, branch: null };
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fd = v => (typeof liveFmtDate === 'function') ? liveFmtDate(v) : String(v ?? '—').slice(0,10);
+  const fn = v => (typeof liveFmtNum === 'function') ? liveFmtNum(v) : String(v ?? '—');
+  const ymd = d => { const z = new Date(d.getTime() - d.getTimezoneOffset()*60000); return z.toISOString().slice(0,10); };
+
+  function setRange(days){
+    const to = new Date(); const from = new Date(); from.setDate(from.getDate() - days);
+    $('atFrom').value = ymd(from); $('atTo').value = ymd(to);
+  }
+  setRange(30);
+
+  // Date basis: warehouse Order Date (same as the FinalInvoice/manifest report
+  // the floor uses) or the date the branch recorded receipt (documentDate).
+  const basisEl = document.createElement('select');
+  basisEl.id = 'atBasis'; basisEl.className = 'live-input'; basisEl.title = 'ยึดวันที่แบบไหน';
+  basisEl.innerHTML = '<option value="order">ยึดวันที่ Order (รายงานคลัง)</option><option value="doc">ยึดวันที่สาขารับ</option>';
+  $('atFrom').before(basisEl);
+  const hintEl = document.querySelector('#atPanel .section-head .hint');
+  // "ยึดวันที่สาขารับ" follows the page's All / Warehouse toggle; Order-date
+  // mode is always warehouse-only (it's matched against the warehouse manifest).
+  const toolbarScope = () => (typeof liveState !== 'undefined' && liveState.dispatch && liveState.dispatch.scope === 'warehouse') ? 'warehouse' : 'all';
+  const setHint = () => { if (hintEl) hintEl.textContent = (basisEl.value === 'order'
+    ? 'ยึดวันที่ Order จากรายงานคลัง (manifest) · เฉพาะของจากคลัง'
+    : 'ยึดวันที่ที่สาขารับ · ' + (toolbarScope() === 'warehouse' ? 'เฉพาะของจากคลัง (ปุ่ม Warehouse)' : 'รวมใบโอนระหว่างสาขา (ปุ่ม All)'))
+    + ' · ไม่รวมสินค้าคืนคลัง (57702)'; };
+  // Re-run a received-date search when the toolbar toggle or Reset changes scope
+  // (setTimeout: let the page's own handler update liveState first).
+  document.querySelectorAll('[data-live="dispatch"][data-scope-btn], [data-live="dispatch"][data-action="reset"]').forEach(btn =>
+    btn.addEventListener('click', () => setTimeout(() => {
+      setHint();
+      if (st.data && st.data.basis !== 'order' && $('atArticle').value.trim()) search();
+    }, 0)));
+  setHint();
+  basisEl.addEventListener('change', () => { setHint(); if ($('atArticle').value.trim()) search(); });
+  const shortInv = v => String(v ?? '').split('_')[0];
+
+  // Sortable column headers: click = newest/largest first, click again = reverse.
+  // One sort state for history tables (main + popup), one for the branch table.
+  const NUM_KEYS = new Set(['pair','accessories','totalAmount','invoiceCount','qty']);
+  const sortSt = { hist: null, branch: { key: 'qty', dir: 'desc' } };
+  function defaultHistSort(d){ return { key: d && d.basis === 'order' ? 'orderDate' : 'documentDate', dir: 'desc' }; }
+  function sortVal(row, key){
+    if (key === 'qty') return Number(row.pair || 0) + Number(row.accessories || 0);
+    if (key === 'invoice') return shortInv(row.invoice);
+    const v = row[key];
+    return NUM_KEYS.has(key) ? Number(v || 0) : (v == null ? '' : String(v));
+  }
+  function sortRows(rows, st2){
+    const k = st2.key, sign = st2.dir === 'asc' ? 1 : -1;
+    return rows.slice().sort((a, b) => {
+      const x = sortVal(a, k), y = sortVal(b, k);
+      if (x === '' && y !== '') return 1;          // blanks always last
+      if (y === '' && x !== '') return -1;
+      const c = (typeof x === 'number' && typeof y === 'number') ? x - y
+        : String(x).localeCompare(String(y), 'en', { numeric: true });
+      return c * sign;
+    });
+  }
+  function th(group, key, label, extraCls){
+    const cur = sortSt[group];
+    const on = cur && cur.key === key;
+    return '<th data-at-sort="' + group + ':' + key + '" class="' + (extraCls || '') + (on ? ' sorted' : '') + '" title="คลิกเพื่อเรียง">'
+      + label + (on ? '<span class="at-ind">' + (cur.dir === 'desc' ? '▼' : '▲') + '</span>' : '') + '</th>';
+  }
+  function onSortClick(e){
+    const h = e.target.closest('th[data-at-sort]'); if (!h) return;
+    const [group, key] = h.getAttribute('data-at-sort').split(':');
+    const cur = sortSt[group];
+    sortSt[group] = (cur && cur.key === key) ? { key, dir: cur.dir === 'desc' ? 'asc' : 'desc' } : { key, dir: 'desc' };
+    const openB = st.branch, top = modal.scrollTop;
+    render();
+    if (openB) { openBranch(openB); modal.scrollTop = top; }
+  }
+  $('atResult').addEventListener('click', onSortClick);
+
+  $('atToggle').addEventListener('click', () => {
+    const p = $('atPanel'); p.hidden = !p.hidden;
+    $('atToggle').classList.toggle('active', !p.hidden);
+    if (!p.hidden) $('atArticle').focus();
+  });
+  document.querySelectorAll('[data-at-range]').forEach(b => b.addEventListener('click', () => {
+    setRange(Number(b.getAttribute('data-at-range')));
+    if ($('atArticle').value.trim()) search();
+  }));
+  $('atSearch').addEventListener('click', search);
+  $('atArticle').addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
+  $('atExport').addEventListener('click', () => exportCsv(null));
+
+  async function search(){
+    const article = $('atArticle').value.trim();
+    const from = $('atFrom').value, to = $('atTo').value;
+    if (!article) { msg('กรุณาใส่ Article'); return; }
+    if (!from || !to) { msg('กรุณาเลือกช่วงวันที่ให้ครบ'); return; }
+    msg('กำลังค้นหา…');
+    $('atExport').disabled = true;
+    if (!modal.hidden) closeBranch();
+    st.data = null; st.branch = null;
+    try {
+      let res;
+      if (basisEl.value === 'order') {
+        const invoices = await loadManifest(from, to);
+        msg('พบใบจากรายงานคลัง ' + fn(invoices.length) + ' ใบ — กำลังเทียบกับข้อมูลรับของสาขา…');
+        res = await fetch('/api/article-trace/by-invoice', {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ article, dateFrom: from, dateTo: to, invoices }),
+        });
+      } else {
+        const qs = new URLSearchParams({ article, dateFrom: from, dateTo: to, scope: toolbarScope() });
+        res = await fetch('/api/article-trace?' + qs.toString());
+      }
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || ('HTTP ' + res.status));
+      body.basis = body.basis || 'doc';
+      st.data = body;
+      sortSt.hist = defaultHistSort(body);
+      render();
+    } catch (err) {
+      msg('ค้นหาไม่สำเร็จ — ' + esc(err.message));
+    }
+  }
+
+  // Warehouse manifest invoices whose Order Date is in range (Supabase
+  // table manifest, synced from IS_Warehouse by sync_manifest.py). Paged in
+  // 1000s because PostgREST caps each response.
+  async function loadManifest(from, to){
+    if (typeof sb === 'undefined') throw new Error('ยังไม่ได้เชื่อม Supabase');
+    const out = [];
+    for (let off = 0; off < 20000; off += 1000) {
+      const { data, error } = await sb.from('manifest')
+        .select('invoice,store,order_date,manifest_date')
+        .gte('order_date', from + 'T00:00:00+07:00')
+        .lte('order_date', to + 'T23:59:59.999+07:00')
+        .order('invoice')
+        .range(off, off + 999);
+      if (error) throw new Error('อ่านรายงานคลังไม่ได้: ' + error.message);
+      (data || []).forEach(m => out.push({ invoice: m.invoice, store: m.store,
+        orderDate: bkkDate(m.order_date), manifestDate: bkkDate(m.manifest_date) }));
+      if (!data || data.length < 1000) break;
+    }
+    return out;
+  }
+  // timestamptz → YYYY-MM-DD in Bangkok time
+  function bkkDate(v){
+    if (!v) return null;
+    const t = Date.parse(v); if (!Number.isFinite(t)) return String(v).slice(0, 10);
+    return new Date(t + 7 * 3600000).toISOString().slice(0, 10);
+  }
+
+  function msg(t){ $('atResult').innerHTML = '<p class="at-msg">' + t + '</p>'; }
+
+  function render(){
+    const d = st.data; const s = d.summary;
+    if (!d.branches.length) {
+      msg('ไม่พบการจ่ายออกของ Article <b>' + esc(d.article) + '</b> ในช่วง ' + fd(d.dateFrom) + ' – ' + fd(d.dateTo)
+        + (d.basis === 'order' ? ' (ตามวันที่ Order · ใบจากรายงานคลังในช่วงนี้ ' + fn(d.manifestCount) + ' ใบ'
+          + (d.manifestCount ? '' : ' — ถ้าเป็น 0 ลองรัน sync_manifest.py ก่อน') + ')' : ''));
+      return;
+    }
+    const maxQty = Math.max(...d.branches.map(b => Number(b.pair||0) + Number(b.accessories||0)), 1);
+    const isOrder = d.basis === 'order';
+    $('atResult').innerHTML = `
+      ${isOrder ? '<p class="at-note">ยึดวันที่ Order ' + fd(d.dateFrom) + ' – ' + fd(d.dateTo) + ' · ใบจากรายงานคลังในช่วงนี้ ' + fn(d.manifestCount)
+        + ' ใบ (ทุกสาขา) · นับเฉพาะของที่สาขารับเข้าระบบแล้วถึง ' + fd(d.receivedUpTo) + ' ใบที่ยังไม่รับจะยังไม่แสดง</p>'
+        : '<p class="at-note">ยึดวันที่สาขารับ ' + fd(d.dateFrom) + ' – ' + fd(d.dateTo) + ' · '
+          + (d.scope === 'warehouse' ? 'เฉพาะของจากคลัง (' + esc((d.warehouseCodes || []).join(', ')) + ')'
+             : 'รวมใบโอนระหว่างสาขา — กดปุ่ม Warehouse ด้านบนเพื่อดูเฉพาะของจากคลัง') + '</p>'}
+      <div class="at-sum">
+        <div><div class="l">จำนวนสาขา</div><div class="v">${fn(s.branchCount)}</div></div>
+        <div><div class="l">จำนวนใบ</div><div class="v">${fn(s.invoiceCount)}</div></div>
+        <div><div class="l">คู่</div><div class="v">${fn(s.pair)}</div></div>
+        <div><div class="l">อุปกรณ์เสริม</div><div class="v">${fn(s.accessories)}</div></div>
+        <div><div class="l">ยอดรวม</div><div class="v">${fn(s.totalAmount)}</div></div>
+      </div>
+      <div class="section-head"><h3>แยกตามสาขาปลายทาง</h3><div class="hint">คลิกสาขาเพื่อเปิดรายละเอียด · คลิกหัวคอลัมน์เพื่อเรียง</div></div>
+      <div class="panel at-scroll" style="margin-bottom:18px;">
+        <table>
+          <thead><tr>${th('branch','receiver','สาขา (ผู้รับ)')}${th('branch','invoiceCount','จำนวนใบ','num')}${th('branch','pair','คู่','num')}${th('branch','accessories','อุปกรณ์เสริม','num')}${th('branch','totalAmount','ยอดรวม','num')}${th('branch','firstDate', isOrder ? 'Order แรก' : 'รับครั้งแรก')}${th('branch','lastDate', isOrder ? 'Order ล่าสุด' : 'รับล่าสุด')}${th('branch','qty','รวม (คู่+ชิ้น)')}</tr></thead>
+          <tbody id="atBranchBody">${sortRows(d.branches, sortSt.branch).map(b => {
+            const q = Number(b.pair||0) + Number(b.accessories||0);
+            return `<tr data-at-branch="${esc(b.receiver)}" title="คลิกเพื่อดูรายละเอียดสาขา ${esc(b.receiver)}">
+              <td class="mono">${esc(b.receiver)}</td>
+              <td class="num">${fn(b.invoiceCount)}</td>
+              <td class="num">${fn(b.pair)}</td>
+              <td class="num">${fn(b.accessories)}</td>
+              <td class="num">${fn(b.totalAmount)}</td>
+              <td>${fd(b.firstDate)}</td>
+              <td>${fd(b.lastDate)}</td>
+              <td><div class="at-bar" style="width:${Math.round(q / maxQty * 100)}%"></div></td>
+            </tr>`;}).join('')}</tbody>
+        </table>
+      </div>
+      <div class="section-head"><h3>แยกตามไซส์ — ทุกสาขา</h3><div class="hint">จำนวนคู่/ชิ้นต่อไซส์</div></div>
+      <div class="panel at-scroll" style="margin-bottom:18px;">${sizeMatrix(d, null)}</div>
+      <div class="section-head">
+        <h3>ประวัติการจ่ายสินค้าออก — ทุกสาขา</h3>
+        <div class="hint">${fn(d.history.length)} ใบ · คลิกหัวคอลัมน์เพื่อเรียง</div>
+      </div>
+      <div class="panel at-scroll">${histTable(d.history, isOrder)}</div>
+      ${d.truncated ? '<p class="at-msg">แสดงประวัติ ' + fn(d.historyLimit) + ' ใบล่าสุดเท่านั้น — ยอดสรุปด้านบนยังครบทุกใบ ลองย่อช่วงวันที่เพื่อดูประวัติทั้งหมด</p>' : ''}
+    `;
+    $('atExport').disabled = false;
+
+    document.querySelectorAll('#atBranchBody tr').forEach(tr =>
+      tr.addEventListener('click', () => openBranch(tr.getAttribute('data-at-branch'))));
+  }
+
+  function histTable(rows, isOrder){
+    if (!rows.length) return '<div class="empty-note">ไม่มีประวัติ</div>';
+    return `<table>
+      <thead><tr>${isOrder ? th('hist','orderDate','วันที่ Order') + th('hist','manifestDate','Manifest Date') : ''}${th('hist','documentDate','วันที่สาขารับ')}${th('hist','bookedDate','วันที่บันทึก')}${th('hist','sender','ผู้ส่ง')}${th('hist','receiver','สาขา (ผู้รับ)')}${th('hist','invoice','เลขที่ใบ')}<th>Size × จำนวน</th>${th('hist','pair','คู่','num')}${th('hist','accessories','อุปกรณ์เสริม','num')}${th('hist','totalAmount','ยอดรวม','num')}</tr></thead>
+      <tbody>${sortRows(rows, sortSt.hist || defaultHistSort(st.data)).map(h => `<tr>
+        ${isOrder ? '<td>' + fd(h.orderDate) + '</td><td>' + fd(h.manifestDate) + '</td>' : ''}
+        <td>${fd(h.documentDate)}</td>
+        <td>${fd(h.bookedDate)}</td>
+        <td>${esc(h.sender)}</td>
+        <td class="mono">${esc(h.receiver)}</td>
+        <td class="mono" title="${esc(h.invoiceFull || h.invoice)}">${esc(shortInv(h.invoice))}</td>
+        <td class="at-sizes">${esc(h.sizes)}</td>
+        <td class="num">${fn(h.pair)}</td>
+        <td class="num">${fn(h.accessories)}</td>
+        <td class="num">${fn(h.totalAmount)}</td>
+      </tr>`).join('')}</tbody>
+    </table>`;
+  }
+
+  // ─── Branch popup: size table + per-invoice history for one branch ───
+  const modal = document.createElement('div');
+  modal.className = 'at-modal'; modal.hidden = true;
+  modal.setAttribute('role', 'dialog'); modal.setAttribute('aria-modal', 'true');
+  document.body.appendChild(modal);
+  modal.addEventListener('click', e => { if (e.target === modal) closeBranch(); else onSortClick(e); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !modal.hidden) closeBranch(); });
+
+  function openBranch(branch){
+    const d = st.data; if (!d) return;
+    st.branch = branch;
+    const isOrder = d.basis === 'order';
+    const b = d.branches.find(x => String(x.receiver) === branch) || {};
+    const rows = d.history.filter(h => String(h.receiver) === branch);
+    modal.innerHTML = `
+      <div class="at-modal-box">
+        <div class="at-modal-head">
+          <div>
+            <h3>สาขา ${esc(branch)} · Article ${esc(d.article)}</h3>
+            <div class="sub">${isOrder ? 'ยึดวันที่ Order (รายงานคลัง)' : 'ยึดวันที่สาขารับ' + (d.scope === 'warehouse' ? ' · เฉพาะของจากคลัง' : ' · รวมใบโอน')} ${fd(d.dateFrom)} – ${fd(d.dateTo)} · ไม่รวมสินค้าคืนคลัง (57702)</div>
+          </div>
+          <div class="at-modal-actions">
+            <button class="live-btn" type="button" data-at-mexport>Export CSV</button>
+            <button class="live-btn primary" type="button" data-at-mclose>ปิด</button>
+          </div>
+        </div>
+        <div class="at-sum">
+          <div><div class="l">จำนวนใบ</div><div class="v">${fn(b.invoiceCount)}</div></div>
+          <div><div class="l">คู่</div><div class="v">${fn(b.pair)}</div></div>
+          <div><div class="l">อุปกรณ์เสริม</div><div class="v">${fn(b.accessories)}</div></div>
+          <div><div class="l">ยอดรวม</div><div class="v">${fn(b.totalAmount)}</div></div>
+          <div><div class="l">${isOrder ? 'Order แรก – ล่าสุด' : 'รับครั้งแรก – ล่าสุด'}</div><div class="v" style="font-size:15px;">${fd(b.firstDate)} – ${fd(b.lastDate)}</div></div>
+        </div>
+        <div class="section-head"><h3>แยกตามไซส์</h3><div class="hint">จำนวนคู่/ชิ้นต่อไซส์</div></div>
+        <div class="panel at-scroll" style="margin-bottom:18px;">${sizeMatrix(d, branch)}</div>
+        <div class="section-head"><h3>ประวัติการจ่ายสินค้าออก</h3><div class="hint">${fn(rows.length)} ใบ · คลิกหัวคอลัมน์เพื่อเรียง</div></div>
+        <div class="panel at-scroll">${histTable(rows, isOrder)}</div>
+      </div>`;
+    modal.hidden = false;
+    document.body.classList.add('at-modal-open');
+    modal.scrollTop = 0;
+    modal.querySelector('[data-at-mclose]').addEventListener('click', closeBranch);
+    modal.querySelector('[data-at-mexport]').addEventListener('click', () => exportCsv(branch));
+    modal.querySelector('[data-at-mclose]').focus();
+  }
+  function closeBranch(){
+    modal.hidden = true; modal.innerHTML = '';
+    document.body.classList.remove('at-modal-open');
+    st.branch = null;
+  }
+
+  // Branch × size table: rows = branches (or just one), columns = sizes,
+  // cells = qty (pairs + accessory pieces). Row totals always equal the
+  // branch's คู่ + อุปกรณ์เสริม in the branch table.
+  function sizeMatrix(d, branch){
+    const rows = (d.sizes || []).filter(r => !branch || String(r.receiver) === branch);
+    if (!rows.length) return '<div class="empty-note">ไม่มีข้อมูลไซส์</div>';
+    const sizes = [...new Set(rows.map(r => String(r.size)))]
+      .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
+    const branches = branch ? [branch]
+      : d.branches.map(b => String(b.receiver)).filter(b => rows.some(r => String(r.receiver) === b));
+    const cell = {};
+    rows.forEach(r => { cell[r.receiver + '|' + r.size] = Number(r.qty || 0); });
+    const colTot = sizes.map(z => branches.reduce((t, b) => t + (cell[b + '|' + z] || 0), 0));
+    const line = (label, vals, cls) => '<tr' + (cls ? ' class="' + cls + '"' : '') + '><td class="mono">' + label + '</td>'
+      + vals.map(v => '<td class="num' + (v ? '' : ' zero') + '">' + (v ? fn(v) : '·') + '</td>').join('')
+      + '<td class="num tot">' + fn(vals.reduce((a, b) => a + b, 0)) + '</td></tr>';
+    return '<table class="at-matrix"><thead><tr><th>สาขา / ไซส์</th>'
+      + sizes.map(z => '<th class="num">' + esc(z) + '</th>').join('') + '<th class="num">รวม</th></tr></thead><tbody>'
+      + branches.map(b => line(esc(b), sizes.map(z => cell[b + '|' + z] || 0))).join('')
+      + (branches.length > 1 ? line('รวมทุกสาขา', colTot, 'totrow') : '')
+      + '</tbody></table>';
+  }
+
+  function exportCsv(branch){
+    const d = st.data; if (!d) return;
+    branch = typeof branch === 'string' ? branch : null;
+    const hist = sortRows(branch ? d.history.filter(h => String(h.receiver) === branch) : d.history, sortSt.hist || defaultHistSort(d));
+    const isOrder = d.basis === 'order';
+    const header = ['Article'].concat(isOrder ? ['OrderDate','ManifestDate'] : [],
+      ['ReceivedDate','BookedDate','Sender','Receiver','Invoice','InvoiceFull','Sizes','Pair','Accessories','ToTalAmount']);
+    const lines = [header.join(',')].concat(hist.map(h => [d.article].concat(
+      isOrder ? [fd(h.orderDate), fd(h.manifestDate)] : [],
+      [fd(h.documentDate), fd(h.bookedDate), h.sender ?? '', h.receiver ?? '', shortInv(h.invoice), h.invoiceFull || h.invoice || '',
+      h.sizes ?? '', h.pair ?? 0, h.accessories ?? 0, h.totalAmount ?? 0]
+    ).map(v => '"' + String(v).replace(/"/g, '""') + '"').join(',')));
+    const blob = new Blob(['\ufeff' + lines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'article-' + d.article + (isOrder ? '-order' : '-received') + (branch ? '-' + branch : '') + '-' + d.dateFrom + '_' + d.dateTo + '.csv';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+})();
+</script>
+<dialog id="liveDetailDlg" class="live-detail-dlg">
+  <div class="ld-head">
+    <div><h3 id="ldTitle">รายละเอียดใบ</h3><div class="ld-sub" id="ldSub"></div></div>
+    <button class="live-btn" id="ldClose">ปิด</button>
+  </div>
+  <div class="ld-body" id="ldBody"></div>
+</dialog>
+<!-- WH-TRACE --><script src="wh-trace-ui.js?v=range1"></script>
+<!-- 3D-WAREHOUSE --><script src="bata-warehouse-3d.bundle.js?v=5"></script>
+<!-- 3D-MENUS --><script src="bata-menus-3d.bundle.js?v=1"></script>
+<script>
+// 3D-MENUS: cards shown on each menu's 3D view (numbers come from the same data as the dashboard)
+function wh3mCards(key){
+  function t(id){ var e = document.getElementById(id); return e ? e.textContent : '—'; }
+  var synced = { label: 'ข้อมูลอัปเดตล่าสุด', value: t('kpiSyncedAt'), dot: true };
+  var sim = function(name){ return { label: name, value: 'ภาพจำลองการทำงาน', text: true }; };
+  switch (key) {
+    case 'out': return [{ label: 'รายการจ่ายออก (Dispatch)', value: t('kpiDispatch') }, { label: 'มูลค่ารวม (บาท)', value: t('kpiAmount') }, synced];
+    case 'in':  return [{ label: 'รายการรับเข้า (Receiving)', value: t('kpiReceiving') }, synced];
+    case 'ret': return [sim('สินค้าคืนคลัง'), synced];
+    case 'trf': return [sim('โอนสินค้าระหว่างคลัง'), synced];
+    case 'ship': return [sim('รถออกส่งสาขา'), synced];
+    case 'loc': return [sim('ตำแหน่งจัดเก็บ')];
+    case 'stock': return [sim('สต็อกคงเหลือ')];
+    case 'audit': return [sim('ตรวจสอบสต็อก')];
+    case 'count': return [sim('ตรวจนับสต็อก')];
+  }
+  return [];
+}
+</script>
+<script>
+(function(){
+  var el = document.getElementById('warehouse3d');
+  if (!el) return;
+  if (!window.BataWarehouse3D) { el.style.display = 'none'; return; }
+  document.body.classList.add('wh3d-home');
+  // icon rail: wrap menu text and show it as a tooltip on hover
+  (function(){
+    var tip = document.createElement('div'); tip.className = 'rail-tip'; document.body.appendChild(tip);
+    document.querySelectorAll('.sidebar .nav-item').forEach(function(btn){
+      var label = '';
+      Array.prototype.slice.call(btn.childNodes).forEach(function(n){
+        if (n.nodeType === 3 && n.textContent.trim()) { label = n.textContent.trim(); var sp = document.createElement('span'); sp.className = 'nav-txt'; sp.textContent = label; btn.replaceChild(sp, n); }
+      });
+      if (!label) return;
+      btn.setAttribute('aria-label', label);
+      btn.addEventListener('mouseenter', function(){
+        if (window.innerWidth <= 720) return;
+        var r = btn.getBoundingClientRect(); tip.textContent = label;
+        tip.style.left = (r.right + 12) + 'px'; tip.style.top = (r.top + r.height/2 - 15) + 'px'; tip.classList.add('on');
+      });
+      btn.addEventListener('mouseleave', function(){ tip.classList.remove('on'); });
+    });
+    document.querySelector('.sidebar').addEventListener('scroll', function(){ tip.classList.remove('on'); });
+  })();
+  // stretch the 3D view down to the bottom of the screen
+  window.wh3dFit = function(){
+    var r = el.getBoundingClientRect(); if (!r.width) return;
+    var top = r.top + window.scrollY;
+    el.style.height = Math.max(480, window.innerHeight - top - 20) + 'px';
+  };
+  window.addEventListener('load', window.wh3dFit); setTimeout(window.wh3dFit, 600);
+  window.addEventListener('resize', window.wh3dFit);
+  new MutationObserver(window.wh3dFit).observe(document.getElementById('appShell'), { attributes: true, attributeFilter: ['class'] });
+  setTimeout(window.wh3dFit, 0);
+  try {
+    window.wh3d = BataWarehouse3D.mountWarehouse3D(el, {
+      data: window._wh3dPending || { siteName: 'คลังสินค้ากลาง บางนา' },
+      fixedView: { zoom: true, offset: [87, 56, 50], target: [-3, 0, -8],
+                   fit: { x: [-46, 40], y: [0, 7], z: [-32, 18], padTop: 70 } },
+      hideOverlay: true,    // cards are drawn by this page
+      noDetails: true       // animation only, no click details
+    });
+    // double-click the picture to return to the full view
+    document.getElementById('warehouse3d').addEventListener('dblclick', function(){ window.wh3d.resetZoom(); });
+    var home = document.getElementById('view-home');
+    if (home && !home.classList.contains('active')) window.wh3d.suspend(true);
+  } catch (e) { console.error('3D warehouse', e); el.style.display = 'none'; }
 })();
 </script>
 </body>
