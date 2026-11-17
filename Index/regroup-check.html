@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>เช็คตามใบ Regroup — Bata WMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --bg:#F7F5F3; --panel:#FFFFFF; --panel-2:#FBF1F1; --ink:#241F1D; --ink-soft:#786F6A;
+    --line:#E7DFDA; --brand:#C8102E; --brand-dark:#8E0A20;
+    --green:#2E6B4F; --amber:#B4650A; --blue:#2D5B8A; --grey:#8A817C;
+    --radius:4px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1B1211; --panel:#241816; --panel-2:#2C1917; --ink:#F4EBE9; --ink-soft:#B79C97;
+      --line:#3B2624; --brand:#FF3B57; --brand-dark:#FF8A9C; --green:#5DBB8C; --amber:#E0A04A; --blue:#79A8DA; --grey:#A89590;
+    }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font:14px/1.5 'IBM Plex Sans Thai',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  .num{font-family:'Space Grotesk','IBM Plex Sans Thai',sans-serif;text-align:right;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1280px;margin:0 auto;padding:22px 28px 60px}
+  a{color:var(--brand)}
+  button,input,select{font:inherit;color:inherit}
+  :focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+
+  .top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  .top h1{margin:0;font-size:22px;font-weight:600}
+  .top .sub{color:var(--ink-soft);font-size:13px;margin-top:2px}
+  .back{font-size:13px;text-decoration:none}
+
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}
+  .setup{padding:16px 18px;display:grid;grid-template-columns:minmax(260px,1.4fr) repeat(2,minmax(140px,.5fr)) auto;gap:14px;align-items:end;margin-bottom:18px}
+  .field label{display:block;font-size:12px;color:var(--ink-soft);margin-bottom:5px}
+  .field input[type=date],.field select,.search{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:3px;background:var(--panel)}
+  .drop{display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px dashed var(--line);border-radius:3px;cursor:pointer;min-height:40px}
+  .drop:hover,.drop.over{border-color:var(--brand);background:var(--panel-2)}
+  .drop input{display:none}
+  .drop .fname{font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .drop .pick{font-size:12px;color:var(--brand);font-weight:600;white-space:nowrap}
+  .btn{padding:9px 16px;border:1px solid var(--line);border-radius:3px;background:var(--panel);cursor:pointer;white-space:nowrap}
+  .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .btn.small{padding:5px 10px;font-size:12.5px}
+  .memo-info{grid-column:1/-1;font-size:12.5px;color:var(--ink-soft);display:none}
+  .memo-info b{color:var(--ink);font-weight:600}
+
+  .msg{padding:12px 16px;border-radius:var(--radius);margin-bottom:16px;font-size:13.5px;display:none}
+  .msg.err{display:block;background:color-mix(in srgb,var(--brand) 10%,var(--panel));border:1px solid color-mix(in srgb,var(--brand) 35%,transparent)}
+  .msg.info{display:block;background:var(--panel);border:1px solid var(--line);color:var(--ink-soft)}
+
+  /* summary: one stacked bar is the page's main visual */
+  .summary{padding:18px 20px;margin-bottom:18px}
+  .summary h2{margin:0 0 4px;font-size:18px;font-weight:600}
+  .summary .lead{color:var(--ink-soft);font-size:13px;margin:0 0 14px}
+  .stack{display:flex;height:14px;border-radius:2px;overflow:hidden;background:var(--line)}
+  .stack span{display:block;height:100%}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 22px;margin-top:12px}
+  .legend button{display:flex;align-items:center;gap:8px;border:0;background:none;padding:2px 0;cursor:pointer;font-size:13px}
+  .legend button[aria-pressed=true] .lbl{text-decoration:underline;text-underline-offset:3px;font-weight:600}
+  .legend .dot{width:10px;height:10px;border-radius:2px}
+  .legend .n{font-family:'Space Grotesk',sans-serif;font-weight:600}
+  .qtyline{display:flex;gap:26px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-soft)}
+  .qtyline b{display:block;font-family:'Space Grotesk',sans-serif;font-size:18px;color:var(--ink);font-weight:600}
+
+  .s-done{--c:var(--green)} .s-partial{--c:var(--blue)} .s-pending{--c:var(--amber)} .s-short{--c:var(--blue)} .s-none,.s-notsent{--c:var(--brand)}
+  .tag{display:inline-block;font-size:11.5px;padding:2px 8px;border-radius:2px;font-weight:600;white-space:nowrap;color:var(--c);background:color-mix(in srgb,var(--c) 13%,transparent)}
+
+  .toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+  .tabs{display:flex;border:1px solid var(--line);border-radius:3px;overflow:hidden;background:var(--panel)}
+  .tabs button{border:0;background:none;padding:7px 14px;cursor:pointer;font-size:13px}
+  .tabs button[aria-selected=true]{background:var(--brand);color:#fff;font-weight:600}
+  .toolbar .search{width:230px}
+  .toolbar select{width:auto;padding:7px 10px;border:1px solid var(--line);border-radius:3px;background:var(--panel)}
+  .toolbar .grow{flex:1}
+  .count{font-size:12.5px;color:var(--ink-soft)}
+
+  .tablewrap{overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  thead th{text-align:left;font-weight:600;font-size:11.5px;color:var(--ink-soft);padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;position:sticky;top:0;background:var(--panel)}
+  thead th.num{text-align:right}
+  tbody td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  tbody tr.row{cursor:pointer}
+  tbody tr.row:hover td{background:var(--panel-2)}
+  tbody tr.row td:first-child::before{content:'▸';display:inline-block;width:14px;color:var(--ink-soft);transition:transform .15s}
+  tbody tr.row.open td:first-child::before{transform:rotate(90deg)}
+  .code{font-family:'Space Grotesk',sans-serif;font-weight:600}
+  .name{color:var(--ink-soft);font-size:12px}
+  .bar{position:relative;height:6px;background:var(--line);border-radius:1px;min-width:90px;margin-top:6px}
+  .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--c,var(--green));border-radius:1px}
+  .pct{font-size:12px;color:var(--ink-soft)}
+  tr.detail>td{background:var(--bg);padding:12px 14px 16px 30px}
+  .detail h4{margin:10px 0 6px;font-size:12.5px;font-weight:600}
+  .detail h4:first-child{margin-top:0}
+  .detail table{background:var(--panel);border:1px solid var(--line);font-size:12.5px}
+  .detail thead th{position:static}
+  .detail td,.detail th{padding:6px 10px}
+  .note{font-size:12px;color:var(--ink-soft);margin-top:6px}
+  .warn{color:var(--amber)}
+  .pager{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;font-size:12.5px;color:var(--ink-soft)}
+  .empty{padding:40px 20px;text-align:center;color:var(--ink-soft)}
+  .foot{margin-top:18px;font-size:12px;color:var(--ink-soft)}
+  .hidden{display:none!important}
+
+  @media (max-width:860px){
+    .setup{grid-template-columns:1fr 1fr}
+    .setup .field:first-child{grid-column:1/-1}
+    .wrap{padding:16px 14px 40px}
+    .toolbar .search{width:100%}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div>
+      <h1>เช็คตามใบ Regroup</h1>
+      <div class="sub">เทียบใบสั่งโอนสินค้าระหว่างร้าน (ชีต Memo) กับข้อมูลจ่ายออกและรับเข้าจริง</div>
+    </div>
+    <a class="back" href="./">กลับหน้าหลัก</a>
+  </div>
+
+  <section class="panel setup">
+    <div class="field">
+      <label for="file">ไฟล์ Regroup (.xlsb / .xlsx)</label>
+      <label class="drop" id="drop">
+        <input type="file" id="file" accept=".xlsb,.xlsx,.xls">
+        <span class="fname" id="fname">ยังไม่ได้เลือกไฟล์</span>
+        <span class="pick">เลือกไฟล์</span>
+      </label>
+    </div>
+    <div class="field">
+      <label for="dfrom">ส่งตั้งแต่วันที่</label>
+      <input type="date" id="dfrom">
+    </div>
+    <div class="field">
+      <label for="dto">ถึงวันที่</label>
+      <input type="date" id="dto">
+    </div>
+    <button class="btn primary" id="run" disabled>เช็คสถานะ</button>
+    <div class="memo-info" id="memoInfo"></div>
+  </section>
+
+  <div class="msg" id="msg"></div>
+
+  <div id="result" class="hidden">
+    <section class="panel summary">
+      <h2 id="sumTitle"></h2>
+      <p class="lead" id="sumLead"></p>
+      <div class="stack" id="stack"></div>
+      <div class="legend" id="legend"></div>
+      <div class="qtyline" id="qtyline"></div>
+    </section>
+
+    <div class="toolbar">
+      <div class="tabs" role="tablist">
+        <button role="tab" data-tab="recv" aria-selected="true">รายร้านรับ</button>
+        <button role="tab" data-tab="send" aria-selected="false">รายร้านโอน</button>
+        <button role="tab" data-tab="pairs" aria-selected="false">รายคู่ร้าน</button>
+        <button role="tab" data-tab="pending" aria-selected="false">ใบที่ค้างรับ</button>
+      </div>
+      <input class="search" id="q" type="search" placeholder="ค้นรหัสหรือชื่อร้าน">
+      <select id="zone"><option value="">ทุกเขต</option></select>
+      <span class="grow"></span>
+      <span class="count" id="count"></span>
+      <button class="btn small" id="csv">ส่งออก CSV</button>
+    </div>
+
+    <div class="panel">
+      <div class="tablewrap"><table id="tbl"></table></div>
+      <div class="pager" id="pager"></div>
+    </div>
+
+    <div class="foot" id="foot"></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  'use strict';
+  const $ = (id) => document.getElementById(id);
+  const fmt = (n) => Number(n || 0).toLocaleString('th-TH');
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const PAGE = 100;
+
+  const STATUS = {
+    // pair / line
+    notsent: { label: 'ยังไม่ส่ง', cls: 's-notsent' },
+    pending: { label: 'ค้างรับ', cls: 's-pending' },
+    short:   { label: 'ส่งไม่ครบ', cls: 's-short' },
+    done:    { label: 'ครบ', cls: 's-done' },
+  };
+  const STORE_STATUS = {
+    recv: {
+      done:    { label: 'รับครบแล้ว', cls: 's-done' },
+      partial: { label: 'รับแล้วบางส่วน', cls: 's-partial' },
+      pending: { label: 'มีของค้างรับ', cls: 's-pending' },
+      none:    { label: 'ยังไม่ได้รับ', cls: 's-none' },
+    },
+    send: {
+      done:    { label: 'ส่งครบ รับครบ', cls: 's-done' },
+      partial: { label: 'ส่งแล้วบางส่วน', cls: 's-partial' },
+      pending: { label: 'ปลายทางยังรับไม่ครบ', cls: 's-pending' },
+      none:    { label: 'ยังไม่ส่ง', cls: 's-none' },
+    },
+  };
+  const ORDER = { none: 0, notsent: 0, pending: 1, partial: 2, short: 2, done: 3 };
+
+  const state = {
+    memo: null,      // { lines, stores: Map(code -> {name, zone, hub}), docNo, docDate, deadline }
+    data: null,      // API result
+    tab: 'recv',
+    filter: '',      // status filter from legend
+    q: '', zone: '', page: 1,
+    open: new Set(),
+  };
+
+  // ─── defaults ────────────────────────────────────────────────
+  const today = new Date();
+  const iso = (d) => new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+  $('dto').value = iso(today);
+
+  // ─── file handling ───────────────────────────────────────────
+  const drop = $('drop');
+  ['dragenter', 'dragover'].forEach((e) => drop.addEventListener(e, (ev) => { ev.preventDefault(); drop.classList.add('over'); }));
+  ['dragleave', 'drop'].forEach((e) => drop.addEventListener(e, (ev) => { ev.preventDefault(); drop.classList.remove('over'); }));
+  drop.addEventListener('drop', (ev) => { if (ev.dataTransfer.files[0]) loadFile(ev.dataTransfer.files[0]); });
+  $('file').addEventListener('change', (ev) => { if (ev.target.files[0]) loadFile(ev.target.files[0]); });
+
+  function showMsg(text, kind = 'err') {
+    const m = $('msg');
+    m.className = 'msg ' + (text ? kind : '');
+    m.textContent = text || '';
+  }
+
+  const normStore = (v) => {
+    const s = String(v ?? '').trim();
+    return /^\d+(\.0+)?$/.test(s) ? String(parseInt(s, 10)).padStart(5, '0') : s;
+  };
+  const normSize = (v) => {
+    const s = String(v ?? '').trim();
+    return /^\d+(\.0+)?$/.test(s) ? String(parseInt(s, 10)).padStart(3, '0') : s;
+  };
+  const normArticle = (v) => {
+    const s = String(v ?? '').trim();
+    return /^\d+(\.0+)?$/.test(s) ? String(parseInt(s, 10)).padStart(7, '0') : s;
+  };
+  const clean = (s) => String(s ?? '').replace(/\s+/g, ' ').trim().toLowerCase();
+
+  async function loadFile(file) {
+    showMsg('');
+    $('fname').textContent = file.name;
+    $('run').disabled = true;
+    $('memoInfo').style.display = 'none';
+    try {
+      const buf = await file.arrayBuffer();
+      const wb = XLSX.read(buf, { type: 'array' });
+      const sheetName = wb.SheetNames.find((n) => n.trim().toLowerCase() === 'memo');
+      if (!sheetName) throw new Error('ไม่พบชีตชื่อ "Memo" ในไฟล์นี้');
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { header: 1, raw: true, defval: null });
+      state.memo = parseMemo(rows);
+      const m = state.memo;
+      if (m.docDate) $('dfrom').value = m.docDate;
+      $('memoInfo').innerHTML =
+        `ใบ Regroup เลขที่ <b>${esc(m.docNo || '-')}</b>` +
+        (m.docDate ? ` ลงวันที่ <b>${esc(thDate(m.docDate))}</b>` : '') +
+        (m.deadline ? ` กำหนดเสร็จ <b>${esc(m.deadline)}</b>` : '') +
+        `, อ่านได้ <b>${fmt(m.lines.length)}</b> บรรทัด รวม <b>${fmt(m.totalQty)}</b> ชิ้น` +
+        ` จาก ${fmt(m.fromCount)} ร้านโอน ไป ${fmt(m.toCount)} ร้านรับ (${fmt(m.pairCount)} คู่ร้าน)` +
+        (m.skipped ? `, ข้าม ${fmt(m.skipped)} บรรทัดที่ข้อมูลไม่ครบ` : '');
+      $('memoInfo').style.display = 'block';
+      $('run').disabled = false;
+    } catch (err) {
+      state.memo = null;
+      showMsg('อ่านไฟล์ไม่ได้: ' + err.message);
+    }
+  }
+
+  function parseMemo(rows) {
+    // header row = the row that has both "Code ร้านโอน" and "Code ร้านรับ"
+    let h = -1;
+    for (let i = 0; i < Math.min(rows.length, 60); i++) {
+      const cells = (rows[i] || []).map(clean);
+      if (cells.some((c) => c.startsWith('code ร้านโอน')) && cells.some((c) => c.startsWith('code ร้านรับ'))) { h = i; break; }
+    }
+    if (h < 0) throw new Error('ไม่พบแถวหัวตาราง (Code ร้านโอน / Code ร้านรับ) ในชีต Memo');
+    const head = rows[h].map(clean);
+    const col = (...names) => {
+      for (const n of names) { const i = head.findIndex((c) => c === n || c.startsWith(n)); if (i >= 0) return i; }
+      return -1;
+    };
+    const C = {
+      fromZone: col('เขตร้านโอน'), from: col('code ร้านโอน'), fromName: col('storename ร้านโอน'), fromHub: col('hub ร้านโอน'),
+      article: col('article'), size: col('size'), qty: col('qty'),
+      toZone: col('เขตร้านรับ'), to: col('code ร้านรับ'), toName: col('storename ร้านรับ'), toHub: col('hub ร้านรับ'),
+      status: col('status'),
+    };
+    for (const k of ['from', 'to', 'article', 'size', 'qty']) {
+      if (C[k] < 0) throw new Error(`ไม่พบคอลัมน์ ${k} ในหัวตาราง`);
+    }
+
+    // header block: doc number, date, deadline
+    let docNo = null; let docDate = null; let deadline = null;
+    for (let i = 0; i < h; i++) {
+      const r = rows[i] || [];
+      r.forEach((c, j) => {
+        const s = String(c ?? '');
+        if (/เอกสาร\s*regroup/i.test(s)) {
+          const v = r.slice(j + 1).find((x) => x != null && String(x).trim() !== '');
+          if (v != null) docNo = String(v).replace(/\s+/g, ' ').trim();
+        }
+        if (/^วันที่/.test(s.trim())) {
+          const v = r.slice(j + 1).find((x) => typeof x === 'number');
+          if (v) { const d = XLSX.SSF.parse_date_code(v); if (d) docDate = `${d.y}-${String(d.m).padStart(2, '0')}-${String(d.d).padStart(2, '0')}`; }
+        }
+        const dl = s.match(/เสร็จภายในวันที่\s*(.+)$/);
+        if (dl) deadline = dl[1].trim();
+      });
+    }
+
+    const lines = []; const stores = new Map(); const pairs = new Set();
+    let skipped = 0; let totalQty = 0;
+    const putStore = (code, name, zone, hub) => {
+      if (!stores.has(code)) stores.set(code, { name: name ? String(name).trim() : '', zone: zone != null ? String(zone).replace(/\.0+$/, '') : '', hub: hub ? String(hub).trim() : '' });
+    };
+    for (let i = h + 1; i < rows.length; i++) {
+      const r = rows[i]; if (!r) continue;
+      const from = normStore(r[C.from]); const to = normStore(r[C.to]);
+      const qty = Number(r[C.qty]);
+      if (!from && !to) continue;
+      if (!/^\d{5}$/.test(from) || !/^\d{5}$/.test(to) || !(qty > 0) || r[C.article] == null) { skipped++; continue; }
+      lines.push({ from, to, article: normArticle(r[C.article]), size: normSize(r[C.size]), qty });
+      totalQty += qty;
+      pairs.add(from + '>' + to);
+      putStore(from, C.fromName >= 0 ? r[C.fromName] : '', C.fromZone >= 0 ? r[C.fromZone] : '', C.fromHub >= 0 ? r[C.fromHub] : '');
+      putStore(to, C.toName >= 0 ? r[C.toName] : '', C.toZone >= 0 ? r[C.toZone] : '', C.toHub >= 0 ? r[C.toHub] : '');
+    }
+    if (!lines.length) throw new Error('ไม่พบรายการโอนใต้หัวตาราง');
+    return {
+      lines, stores, docNo, docDate, deadline, skipped, totalQty,
+      pairCount: pairs.size,
+      fromCount: new Set(lines.map((l) => l.from)).size,
+      toCount: new Set(lines.map((l) => l.to)).size,
+    };
+  }
+
+  function thDate(isoStr) {
+    if (!isoStr) return '';
+    const [y, m, d] = isoStr.split('-').map(Number);
+    return new Date(y, m - 1, d).toLocaleDateString('th-TH', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  // ─── run ─────────────────────────────────────────────────────
+  $('run').addEventListener('click', run);
+  async function run() {
+    if (!state.memo) return;
+    const dateFrom = $('dfrom').value; const dateTo = $('dto').value;
+    if (!dateFrom || !dateTo) return showMsg('กรุณาระบุช่วงวันที่ส่ง');
+    const btn = $('run');
+    btn.disabled = true; btn.textContent = 'กำลังเช็ค…';
+    showMsg('กำลังดึงข้อมูลจ่ายออกและรับเข้าจากฐานข้อมูล อาจใช้เวลาสักครู่', 'info');
+    try {
+      const res = await fetch('/api/regroup-check', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ dateFrom, dateTo, lines: state.memo.lines }),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body.error || `เซิร์ฟเวอร์ตอบกลับ ${res.status}`);
+      state.data = prepare(body);
+      state.filter = ''; state.page = 1; state.open.clear();
+      showMsg('');
+      renderAll();
+    } catch (err) {
+      showMsg(err.message === 'Failed to fetch'
+        ? 'ติดต่อ api-server ไม่ได้ ต้องเปิดหน้านี้ผ่าน http://<เครื่องที่รัน api-server>:3001 และเปิดหน้าต่าง npm run start:api ค้างไว้'
+        : 'เช็คไม่สำเร็จ: ' + err.message);
+    } finally {
+      btn.disabled = false; btn.textContent = 'เช็คสถานะ';
+    }
+  }
+
+  // ─── shape API data into store rows ──────────────────────────
+  function storeInfo(code) { return state.memo.stores.get(code) || { name: '', zone: '', hub: '' }; }
+
+  function prepare(d) {
+    for (const p of d.pairs) {
+      p.fromInfo = storeInfo(p.from); p.toInfo = storeInfo(p.to);
+      p.pct = p.plan ? Math.min(100, Math.round((p.recv / p.plan) * 100)) : 0;
+    }
+    const roll = (side) => {
+      const m = new Map();
+      for (const p of d.pairs) {
+        const code = side === 'recv' ? p.to : p.from;
+        let s = m.get(code);
+        if (!s) { s = { code, info: storeInfo(code), pairs: [], plan: 0, sent: 0, recv: 0, pendingQty: 0, pendingInvoices: 0, n: { notsent: 0, pending: 0, short: 0, done: 0 } }; m.set(code, s); }
+        s.pairs.push(p); s.plan += p.plan; s.sent += p.sent; s.recv += p.recv;
+        s.pendingQty += p.pendingQty; s.pendingInvoices += p.pendingInvoices; s.n[p.status]++;
+      }
+      for (const s of m.values()) {
+        const total = s.pairs.length;
+        if (s.n.done === total) s.status = 'done';
+        else if (side === 'recv' ? s.recv === 0 && s.n.pending === 0 : s.sent === 0) s.status = 'none';
+        else if (s.n.pending > 0) s.status = 'pending';
+        else s.status = 'partial';
+        s.pct = s.plan ? Math.min(100, Math.round(((side === 'recv' ? s.recv : s.sent) / s.plan) * 100)) : 0;
+      }
+      return [...m.values()];
+    };
+    d.recvStores = roll('recv');
+    d.sendStores = roll('send');
+    d.pendingRows = [];
+    for (const p of d.pairs) for (const iv of p.invoices) {
+      if (iv.inPlan && iv.recv < iv.sent) d.pendingRows.push({ ...iv, pair: p, days: daysSince(iv.date) });
+    }
+    return d;
+  }
+  function daysSince(isoStr) {
+    if (!isoStr) return null;
+    const [y, m, dd] = isoStr.split('-').map(Number);
+    return Math.floor((new Date(today.getFullYear(), today.getMonth(), today.getDate()) - new Date(y, m - 1, dd)) / 86400000);
+  }
+
+  // ─── rendering ───────────────────────────────────────────────
+  function renderAll() {
+    $('result').classList.remove('hidden');
+    const zones = [...new Set([...state.memo.stores.values()].map((s) => s.zone).filter(Boolean))].sort();
+    $('zone').innerHTML = '<option value="">ทุกเขต</option>' + zones.map((z) => `<option value="${esc(z)}">เขต ${esc(z)}</option>`).join('');
+    $('zone').value = state.zone && zones.includes(state.zone) ? state.zone : (state.zone = '');
+    renderSummary();
+    renderTable();
+    const d = state.data; const g = d.diag;
+    $('foot').innerHTML =
+      `เทียบแบบ${d.mode === 'article' ? ' Article + Size' : 'ยอดรวมต่อคู่ร้าน (รองเท้า / accessories) เพราะไม่พบคอลัมน์ article หรือ size ในตาราง'}` +
+      ` · ใบส่งในช่วง ${esc(thDate(d.window.dateFrom))} ถึง ${esc(thDate(d.window.dateTo))} (${fmt(g.invoices)} ใบ)` +
+      ` · บรรทัดในแผนที่พบการส่ง ${fmt(g.matchedLines)} จาก ${fmt(g.planLines)}` +
+      ` · ใช้เวลา ${(g.ms / 1000).toFixed(1)} วินาที`;
+  }
+
+  function renderSummary() {
+    const d = state.data; const side = state.tab === 'send' ? 'send' : 'recv';
+    const stores = side === 'send' ? d.sendStores : d.recvStores;
+    const meta = STORE_STATUS[side];
+    const counts = { done: 0, partial: 0, pending: 0, none: 0 };
+    stores.forEach((s) => counts[s.status]++);
+    const total = stores.length;
+    $('sumTitle').textContent = side === 'recv'
+      ? `รับครบแล้ว ${fmt(counts.done)} จาก ${fmt(total)} ร้าน`
+      : `ส่งและปลายทางรับครบ ${fmt(counts.done)} จาก ${fmt(total)} ร้านโอน`;
+    $('sumLead').textContent = side === 'recv'
+      ? `ยังไม่ได้รับเลย ${fmt(counts.none)} ร้าน, มีของค้างรับ ${fmt(counts.pending)} ร้าน, รับแล้วบางส่วน ${fmt(counts.partial)} ร้าน`
+      : `ยังไม่ส่งเลย ${fmt(counts.none)} ร้าน, ปลายทางยังรับไม่ครบ ${fmt(counts.pending)} ร้าน, ส่งแล้วบางส่วน ${fmt(counts.partial)} ร้าน`;
+    const keys = ['done', 'partial', 'pending', 'none'];
+    $('stack').innerHTML = keys.map((k) => counts[k] ? `<span class="${meta[k].cls}" style="width:${(counts[k] / total) * 100}%;background:var(--c)" title="${esc(meta[k].label)} ${counts[k]}"></span>` : '').join('');
+    const showLegend = state.tab === 'recv' || state.tab === 'send';
+    $('legend').innerHTML = showLegend ? keys.map((k) => `
+      <button type="button" class="${meta[k].cls}" data-f="${k}" aria-pressed="${state.filter === k}">
+        <span class="dot" style="background:var(--c)"></span><span class="lbl">${esc(meta[k].label)}</span> <span class="n">${fmt(counts[k])}</span>
+      </button>`).join('') + (state.filter ? '<button type="button" data-f=""><span class="lbl">แสดงทั้งหมด</span></button>' : '') : '';
+    const t = d.totals;
+    $('qtyline').innerHTML = `
+      <div><b>${fmt(t.plan)}</b>ชิ้นตามแผน</div>
+      <div><b>${fmt(t.sent)}</b>ส่งแล้ว (${t.plan ? Math.round(t.sent / t.plan * 100) : 0}%)</div>
+      <div><b>${fmt(t.recv)}</b>รับแล้ว (${t.plan ? Math.round(t.recv / t.plan * 100) : 0}%)</div>
+      <div><b>${fmt(d.pendingRows.length)}</b>ใบที่ยังค้างรับ</div>
+      <div><b>${fmt(t.byStatus.notsent)}</b>คู่ร้านที่ยังไม่ส่ง</div>`;
+  }
+
+  $('legend').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-f]'); if (!b) return;
+    state.filter = state.filter === b.dataset.f ? '' : b.dataset.f;
+    state.page = 1; renderSummary(); renderTable();
+  });
+  document.querySelector('.tabs').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-tab]'); if (!b) return;
+    state.tab = b.dataset.tab; state.filter = ''; state.page = 1; state.open.clear();
+    document.querySelectorAll('.tabs button').forEach((x) => x.setAttribute('aria-selected', x === b));
+    renderSummary(); renderTable();
+  });
+  $('q').addEventListener('input', (e) => { state.q = e.target.value.trim().toLowerCase(); state.page = 1; renderTable(); });
+  $('zone').addEventListener('change', (e) => { state.zone = e.target.value; state.page = 1; renderTable(); });
+
+  const matchStore = (code, info) => !state.q || code.includes(state.q) || (info.name || '').toLowerCase().includes(state.q);
+  const matchZone = (info) => !state.zone || info.zone === state.zone;
+
+  function currentRows() {
+    const d = state.data;
+    if (state.tab === 'recv' || state.tab === 'send') {
+      return (state.tab === 'recv' ? d.recvStores : d.sendStores)
+        .filter((s) => (!state.filter || s.status === state.filter) && matchStore(s.code, s.info) && matchZone(s.info))
+        .sort((a, b) => ORDER[a.status] - ORDER[b.status] || a.pct - b.pct || a.code.localeCompare(b.code));
+    }
+    if (state.tab === 'pairs') {
+      return d.pairs
+        .filter((p) => (matchStore(p.from, p.fromInfo) || matchStore(p.to, p.toInfo)) && (matchZone(p.fromInfo) || matchZone(p.toInfo)))
+        .sort((a, b) => ORDER[a.status] - ORDER[b.status] || a.to.localeCompare(b.to) || a.from.localeCompare(b.from));
+    }
+    return d.pendingRows
+      .filter((r) => (matchStore(r.pair.from, r.pair.fromInfo) || matchStore(r.pair.to, r.pair.toInfo) || r.invoice.toLowerCase().includes(state.q)) && (matchZone(r.pair.fromInfo) || matchZone(r.pair.toInfo)))
+      .sort((a, b) => (b.days ?? 0) - (a.days ?? 0));
+  }
+
+  const storeCell = (code, info) => `<span class="code">${esc(code)}</span><div class="name">${esc(info.name)}${info.zone ? ' · เขต ' + esc(info.zone) : ''}</div>`;
+  const tag = (meta) => `<span class="tag ${meta.cls}">${esc(meta.label)}</span>`;
+  const bar = (pct, cls) => `<div class="${cls}"><div class="bar"><i style="width:${pct}%"></i></div></div>`;
+
+  function renderTable() {
+    const rows = currentRows();
+    const pages = Math.max(1, Math.ceil(rows.length / PAGE));
+    state.page = Math.min(state.page, pages);
+    const slice = rows.slice((state.page - 1) * PAGE, state.page * PAGE);
+    const tbl = $('tbl');
+    const unit = state.tab === 'pending' ? 'ใบ' : state.tab === 'pairs' ? 'คู่ร้าน' : 'ร้าน';
+    $('count').textContent = `${fmt(rows.length)} ${unit}`;
+
+    if (!rows.length) {
+      tbl.innerHTML = `<tbody><tr><td class="empty">${state.tab === 'pending' ? 'ไม่มีใบที่ค้างรับ' : 'ไม่มีรายการที่ตรงกับตัวกรอง'}</td></tr></tbody>`;
+      $('pager').innerHTML = ''; return;
+    }
+
+    if (state.tab === 'recv' || state.tab === 'send') {
+      const side = state.tab; const meta = STORE_STATUS[side];
+      tbl.innerHTML = `<thead><tr>
+          <th>${side === 'recv' ? 'ร้านรับ' : 'ร้านโอน'}</th><th>สถานะ</th>
+          <th class="num">คู่ร้านที่ครบ</th><th class="num">ตามแผน</th><th class="num">ส่งแล้ว</th><th class="num">รับแล้ว</th>
+          <th class="num">ค้างรับ</th><th>${side === 'recv' ? 'รับแล้ว' : 'ส่งแล้ว'}</th></tr></thead><tbody>` +
+        slice.map((s) => {
+          const open = state.open.has(s.code);
+          const done = s.n.done; const tot = s.pairs.length;
+          return `<tr class="row ${open ? 'open' : ''}" data-k="${esc(s.code)}" tabindex="0">
+              <td>${storeCell(s.code, s.info)}</td>
+              <td>${tag(meta[s.status])}</td>
+              <td class="num">${fmt(done)}/${fmt(tot)}</td>
+              <td class="num">${fmt(s.plan)}</td><td class="num">${fmt(s.sent)}</td><td class="num">${fmt(s.recv)}</td>
+              <td class="num">${s.pendingQty ? `<span class="warn">${fmt(s.pendingQty)}</span>` : '–'}</td>
+              <td class="${meta[s.status].cls}"><span class="pct">${s.pct}%</span>${bar(s.pct, '')}</td></tr>` +
+            (open ? `<tr class="detail"><td colspan="8">${pairsTable(s.pairs, side)}</td></tr>` : '');
+        }).join('') + '</tbody>';
+    } else if (state.tab === 'pairs') {
+      tbl.innerHTML = `<thead><tr><th>ร้านโอน</th><th>ร้านรับ</th><th>สถานะ</th><th class="num">ตามแผน</th><th class="num">ส่งแล้ว</th><th class="num">รับแล้ว</th><th class="num">ขาดจากแผน</th><th class="num">ใบส่ง</th></tr></thead><tbody>` +
+        slice.map((p) => {
+          const k = p.from + '>' + p.to; const open = state.open.has(k);
+          return `<tr class="row ${open ? 'open' : ''}" data-k="${esc(k)}" tabindex="0">
+              <td>${storeCell(p.from, p.fromInfo)}</td><td>${storeCell(p.to, p.toInfo)}</td>
+              <td>${tag(STATUS[p.status])}</td>
+              <td class="num">${fmt(p.plan)}</td><td class="num">${fmt(p.sent)}</td><td class="num">${fmt(p.recv)}</td>
+              <td class="num">${p.short ? fmt(p.short) : '–'}</td><td class="num">${fmt(p.invoices.length)}</td></tr>` +
+            (open ? `<tr class="detail"><td colspan="8">${pairDetail(p)}</td></tr>` : '');
+        }).join('') + '</tbody>';
+    } else {
+      tbl.innerHTML = `<thead><tr><th>Invoice</th><th>ร้านโอน</th><th>ร้านรับ</th><th>วันที่ส่ง</th><th class="num">ค้างมา (วัน)</th><th class="num">ส่ง</th><th class="num">รับแล้ว</th><th class="num">ยังไม่รับ</th></tr></thead><tbody>` +
+        slice.map((r) => `<tr>
+            <td class="code">${esc(r.invoice)}</td>
+            <td>${storeCell(r.pair.from, r.pair.fromInfo)}</td><td>${storeCell(r.pair.to, r.pair.toInfo)}</td>
+            <td>${esc(thDate(r.date))}</td>
+            <td class="num">${r.days ?? '–'}</td>
+            <td class="num">${fmt(r.sent)}</td><td class="num">${fmt(r.recv)}</td>
+            <td class="num warn">${fmt(r.sent - r.recv)}</td></tr>`).join('') + '</tbody>';
+    }
+
+    $('pager').innerHTML = pages > 1
+      ? `<button class="btn small" data-p="-1" ${state.page === 1 ? 'disabled' : ''}>ก่อนหน้า</button><span>หน้า ${state.page} / ${pages}</span><button class="btn small" data-p="1" ${state.page === pages ? 'disabled' : ''}>ถัดไป</button>`
+      : '';
+  }
+
+  function pairsTable(pairs, side) {
+    const sorted = [...pairs].sort((a, b) => ORDER[a.status] - ORDER[b.status]);
+    return `<table><thead><tr><th>${side === 'recv' ? 'จากร้าน' : 'ไปร้าน'}</th><th>สถานะ</th><th class="num">ตามแผน</th><th class="num">ส่งแล้ว</th><th class="num">รับแล้ว</th><th>ใบส่ง</th></tr></thead><tbody>` +
+      sorted.map((p) => {
+        const code = side === 'recv' ? p.from : p.to; const info = side === 'recv' ? p.fromInfo : p.toInfo;
+        const invs = p.invoices.filter((i) => i.inPlan).map((i) => `${esc(i.invoice)}${i.recv < i.sent ? ' <span class="warn">(ค้าง ' + fmt(i.sent - i.recv) + ')</span>' : ''}`).join(', ');
+        return `<tr><td>${storeCell(code, info)}</td><td>${tag(STATUS[p.status])}</td><td class="num">${fmt(p.plan)}</td><td class="num">${fmt(p.sent)}</td><td class="num">${fmt(p.recv)}</td><td>${invs || '–'}</td></tr>`;
+      }).join('') + '</tbody></table><div class="note">ดูรายละเอียดถึงระดับ Article ได้ที่แท็บ "รายคู่ร้าน"</div>';
+  }
+
+  function pairDetail(p) {
+    const isArticle = state.data.mode === 'article';
+    const lines = [...p.lines].sort((a, b) => ORDER[a[5]] - ORDER[b[5]] || String(a[0]).localeCompare(String(b[0])));
+    let html = `<h4>ใบส่ง</h4>`;
+    html += p.invoices.length
+      ? `<table><thead><tr><th>Invoice</th><th>วันที่ส่ง</th><th class="num">ส่ง</th><th class="num">รับแล้ว</th><th>วันที่รับ</th></tr></thead><tbody>` +
+        p.invoices.map((i) => `<tr><td class="code">${esc(i.invoice)}${i.inPlan ? '' : ' <span class="name">(ไม่มีสินค้าตามแผน)</span>'}</td><td>${esc(thDate(i.date))}</td><td class="num">${fmt(i.sent)}</td><td class="num ${i.recv < i.sent ? 'warn' : ''}">${fmt(i.recv)}</td><td>${i.recvDate ? esc(thDate(i.recvDate)) : '–'}</td></tr>`).join('') + '</tbody></table>'
+      : '<div class="note">ยังไม่พบใบส่งจากร้านโอนไปร้านรับในช่วงวันที่นี้</div>';
+    html += `<h4>${isArticle ? 'รายการตามแผน (Article / Size)' : 'รายการตามแผน'}</h4>
+      <table><thead><tr><th>${isArticle ? 'Article' : 'ประเภท'}</th>${isArticle ? '<th>Size</th>' : ''}<th class="num">ตามแผน</th><th class="num">ส่ง</th><th class="num">รับ</th><th>สถานะ</th></tr></thead><tbody>` +
+      lines.map((l) => `<tr><td class="code">${esc(l[0])}</td>${isArticle ? `<td>${esc(l[1])}</td>` : ''}<td class="num">${fmt(l[2])}</td><td class="num">${fmt(l[3])}</td><td class="num">${fmt(l[4])}</td><td>${tag(STATUS[l[5]])}</td></tr>`).join('') + '</tbody></table>';
+    if (p.offPlanSent) html += `<div class="note">มีสินค้านอกแผนส่งไปด้วย ${fmt(p.offPlanSent)} ชิ้น (รับแล้ว ${fmt(p.offPlanRecv)}) ไม่นับรวมในยอดตามแผน</div>`;
+    return html;
+  }
+
+  $('tbl').addEventListener('click', (e) => {
+    const tr = e.target.closest('tr.row'); if (!tr) return;
+    const k = tr.dataset.k;
+    state.open.has(k) ? state.open.delete(k) : state.open.add(k);
+    renderTable();
+  });
+  $('tbl').addEventListener('keydown', (e) => {
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('tr.row')) { e.preventDefault(); e.target.click(); }
+  });
+  $('pager').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-p]'); if (!b) return;
+    state.page += Number(b.dataset.p); renderTable();
+    $('tbl').scrollIntoView({ block: 'start', behavior: 'smooth' });
+  });
+
+  // ─── CSV export (current tab + filters) ──────────────────────
+  $('csv').addEventListener('click', () => {
+    const rows = currentRows(); const out = [];
+    if (state.tab === 'recv' || state.tab === 'send') {
+      const meta = STORE_STATUS[state.tab];
+      out.push(['รหัสร้าน', 'ชื่อร้าน', 'เขต', 'Hub', 'สถานะ', 'คู่ร้านที่ครบ', 'คู่ร้านทั้งหมด', 'ตามแผน', 'ส่งแล้ว', 'รับแล้ว', 'ค้างรับ', 'ใบค้างรับ']);
+      rows.forEach((s) => out.push([s.code, s.info.name, s.info.zone, s.info.hub, meta[s.status].label, s.n.done, s.pairs.length, s.plan, s.sent, s.recv, s.pendingQty, s.pendingInvoices]));
+    } else if (state.tab === 'pairs') {
+      const isArticle = state.data.mode === 'article';
+      out.push(['ร้านโอน', 'ชื่อร้านโอน', 'ร้านรับ', 'ชื่อร้านรับ', 'สถานะคู่ร้าน', isArticle ? 'Article' : 'ประเภท', 'Size', 'ตามแผน', 'ส่ง', 'รับ', 'สถานะรายการ', 'Invoices']);
+      rows.forEach((p) => {
+        const invs = p.invoices.map((i) => i.invoice).join(' ');
+        p.lines.forEach((l) => out.push([p.from, p.fromInfo.name, p.to, p.toInfo.name, STATUS[p.status].label, l[0], l[1], l[2], l[3], l[4], STATUS[l[5]].label, invs]));
+      });
+    } else {
+      out.push(['Invoice', 'ร้านโอน', 'ชื่อร้านโอน', 'ร้านรับ', 'ชื่อร้านรับ', 'วันที่ส่ง', 'ค้างมา (วัน)', 'ส่ง', 'รับแล้ว', 'ยังไม่รับ']);
+      rows.forEach((r) => out.push([r.invoice, r.pair.from, r.pair.fromInfo.name, r.pair.to, r.pair.toInfo.name, r.date, r.days, r.sent, r.recv, r.sent - r.recv]));
+    }
+    const csv = '\uFEFF' + out.map((r) => r.map((v) => {
+      const s = String(v ?? '');
+      if (/^0\d+$/.test(s)) return `="${s}"`; // keep leading zeros (e.g. article 0315137) in Excel
+      return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    }).join(',')).join('\r\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const tabName = { recv: 'ร้านรับ', send: 'ร้านโอน', pairs: 'คู่ร้าน', pending: 'ค้างรับ' }[state.tab];
+    a.download = `regroup-check_${tabName}_${iso(new Date())}.csv`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+})();
+</script>
+</body>
+</html>

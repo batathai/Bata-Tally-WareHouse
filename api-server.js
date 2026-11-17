@@ -19,7 +19,10 @@ const path = require('path');
 const express = require('express');
 const mysql = require('mysql2/promise');
 require('dotenv').config();
-
+// SHIPMENT-STATUS: Goods on Way + Goods Received (see shipment-status.js)
+const registerShipmentStatus = require('./shipment-status');
+// REGROUP-CHECK: เช็คตามใบ Regroup (see regroup-check.js)
+const registerRegroupCheck = require('./regroup-check');
 const PORT = process.env.API_PORT || 3001;
 
 // receiver code that marks a `receiving` row as a warehouse return rather
@@ -41,6 +44,9 @@ function getPool() {
       user: process.env.MYSQL_USER,
       password: process.env.MYSQL_PASSWORD,
       database: process.env.MYSQL_DATABASE,
+      // SYNC-DATE-FIX: keep MySQL DATE as 'YYYY-MM-DD' text — as a JS Date it was
+      // serialized to UTC and shifted one day early (UTC+7).
+      dateStrings: ['DATE'],
       waitForConnections: true,
       connectionLimit: 5,
     });
@@ -133,6 +139,46 @@ function buildDailyQuery(table, filters, opts) {
 
 const app = express();
 app.use(express.static(path.join(__dirname, 'Index')));
+
+// ─── Line-item detail for a single invoice ─────────────────────
+// Same table + fixed receiver segmentation as the list view, but WITHOUT
+// the GROUP BY — returns the raw item rows that make up one invoice.
+// SHIPMENT-STATUS: registered before /api/:view so it isn't treated as an unknown view
+registerShipmentStatus(app, getPool);
+// REGROUP-CHECK: POST /api/regroup-check + GET /api/regroup-check/columns
+registerRegroupCheck(app, getPool);
+
+app.get('/api/:view/detail', async (req, res) => {
+  const view = VIEWS[req.params.view];
+  if (!view) return res.status(404).json({ error: `Unknown view "${req.params.view}"` });
+
+  const invoice = req.query.invoice;
+  if (!invoice) return res.status(400).json({ error: 'invoice query param required' });
+
+  const where = ['invoice = ?'];
+  const params = [invoice];
+  if (view.opts.lockReceiver)    { where.push('receiver = ?');  params.push(view.opts.lockReceiver); }
+  if (view.opts.excludeReceiver) { where.push('receiver <> ?'); params.push(view.opts.excludeReceiver); }
+
+  const sql = `SELECT * FROM \`${view.table}\` WHERE ${where.join(' AND ')} ORDER BY isFootware DESC LIMIT 5000`;
+
+  try {
+    const conn = getPool();
+    const [rows] = await conn.execute(sql, params);
+    res.json({ invoice, rows });
+  } catch (err) {
+    console.error(`[GET /api/${req.params.view}/detail] failed:`, err);
+    res.status(500).json({ error: 'Detail query failed — see server log' });
+  }
+});
+
+// ARTICLE-TRACE: "Article นี้ไปสาขาไหนบ้าง" for จ่ายสินค้าออก — must be registered
+// before /api/:view, otherwise "article-trace" is treated as an unknown view.
+require('./article-trace')(app, getPool, { excludeReceiver: RETURN_RECEIVER });
+
+// WH-TRACE: warehouse shipment timeline (สถานะการส่งของ → ติดตามใบจากคลัง).
+// Must be registered before /api/:view.
+require('./wh-trace')(app, getPool, { excludeReceiver: RETURN_RECEIVER });
 
 app.get('/api/:view', async (req, res) => {
   const { view: viewName } = req.params;

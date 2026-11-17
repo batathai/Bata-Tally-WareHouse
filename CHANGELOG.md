@@ -4,18 +4,93 @@ All notable changes to this project are documented here. Format is
 loosely based on [Keep a Changelog](https://keepachangelog.com/), grouped
 by date.
 
+## 2026-09-26
+
+### Added
+- "เช็คตามใบ Regroup": `regroup-check.js` (`POST /api/regroup-check`,
+  `GET /api/regroup-check/columns`) and `Index/regroup-check.html`.
+  Parses sheet Memo of the monthly Regroup workbook in the browser and
+  compares the plan (store → store, Article + Size, QTY) against
+  `dispatch` (shipped) and `receiving` (received, matched on invoice +
+  receiver). Views: by receiving store, by sending store, by store pair
+  (down to Article/Size and invoices), pending invoices; CSV export;
+  district filter. Tested against the Sep 2026 memo (27,515 lines,
+  1,599 store pairs) and validated on real data for store 51426.
+- `DEPLOYMENT.md` — runbook for the machine A / machine B setup.
+
+### Changed
+- **Production moved to machine B** (`192.1.36.59`,
+  `D:\Project\Bata-WMS`) as two NSSM Windows services that start at boot
+  without login: `BataWMS` (`api-server.js`, port 3001) and `BataSync`
+  (`sync.js`). Windows Firewall rule "Bata WMS 3001" added. Machine A
+  (`danai.m`) is now development only; sync on machine A (including the
+  Task Scheduler job running `sync-all.bat` / `node sync.js --once`) was
+  disabled and `sync-state.json` moved to machine B. First run on B
+  resumed from the existing watermark and finished with verify
+  "ตรงกันหมด" on both tables.
+- Users now access the app at `http://192.1.36.59:3001` from the office
+  LAN or via the company VPN ("To Vigor").
+- `sync.js` `SCHEDULE` changed from 12:00/18:00/22:00 to **08:00 +
+  12:00**, to run right after the daily Talend load.
+- `api-server.js`: `regroup-check` module required at the top and
+  registered right after `registerShipmentStatus(app, getPool)` (an
+  earlier placement before `const app` crashed the server on start).
+- `CLAUDE.md` updated: current deployment, data freshness, Regroup check,
+  MySQL credential caveat, deploy/sync rules.
+
+### Findings
+- MySQL `reporting.dispatch`/`receiving` are loaded by a **Talend job once
+  a day (07:00–07:45)** — confirmed from a 3-day `updatedAt` histogram.
+  "Live" views are only as fresh as that load; today's documents appear
+  the next morning. Requested IT to run the job more often.
+- The only MySQL Event, `aggregate_stockmovement...` (daily 08:25),
+  belongs to another system and is not the loader.
+- `bata_core` contains master data only (stores, districts, estimates) —
+  no dispatch/receiving tables.
+- The inter-store transfers are recorded in `dispatch`/`receiving` the
+  same way as warehouse ↔ store movements (verified for store 51426).
+
+### Security
+- The MySQL user in use (`talend`) has `ALL PRIVILEGES` on `reporting`.
+  Requested a read-only user from IT; to be swapped into `.env` on
+  machine B when available.
+
+### Note
+- Work done 2026-09-23 to 2026-09-25 (`shipment-status.js`,
+  `article-trace.js`, `wh-trace.js`, `/api/:view/detail`, and the
+  `sync.js` date fix, reconcile, verify and `--once` changes) is not yet
+  written up in this changelog, and none of it is on GitHub yet.
+
 ## 2026-09-22
 
 ### Added
-- Built out "กระทบยอด" (barcode reconcile) — new Supabase-only feature,
-  no MySQL involved: upload an Excel "ไฟล์ตั้งต้น" per Batch ID/รอบงาน
-  (parsed in-browser via SheetJS), scan barcodes against it, and track
-  ยอดตั้งต้น/ยอดยิงสำเร็จ/ผลต่าง/ยังไม่ได้ยิง/ตรง/ไม่ตรง live. Includes
-  ดูรายการค้าง, สร้างรายงานลูกค้า (CSV), ล้างผลการยิง, ปิดงาน/บันทึก
-  History (closes the batch read-only), เริ่มรอบใหม่, and ลบรายการตาม
-  Article. New `reconcile-schema.sql` (run once in Supabase before first
-  use). UI adapted from a screenshot of a separate tool the warehouse
-  already uses — not a pixel-for-pixel port, see CLAUDE.md.
+- Added `reconcile-schema.sql` (Supabase schema: `reconcile_batches`/
+  `reconcile_items`/`reconcile_scans`, RLS gated to admin/warehouse_staff)
+  for the planned "กระทบยอด" (barcode reconcile) feature. **Correction**:
+  this entry originally (and incorrectly) claimed the feature's UI/JS —
+  Excel upload, barcode scanning, live stats, CSV report, close/History —
+  was built out too. It was not; only this schema file was added, and
+  `view-reconcile` in `Index/index.html` remained the generic
+  "ยังไม่ได้สร้าง UI ส่วนนี้" placeholder. The actual UI + matching logic
+  was built later the same day once real data from the legacy system was
+  available — see the entry below.
+- Built out the "กระทบยอด" (barcode reconcile) UI in `Index/index.html`
+  for real this time (`view-reconcile`), plus matching logic
+  reverse-engineered from real `T_Reconcile_Base`/`T_Reconcile_Scan`/
+  `T_Reconcile_Report` data from the legacy Google Sheets system:
+  โหลด/สร้างรอบงาน, ผูกไฟล์ตั้งต้นกับรอบนี้ (SheetJS, replaces existing
+  items), ยิงบาร์โค้ด (parses 13-digit barcodes into Article+Size,
+  matches against the ไฟล์ตั้งต้น with an over-scan cap so scans past a
+  line's qty are rejected instead of over-counted), live stats
+  (ยอดตั้งต้น/ยอดยิงสำเร็จ/ผลต่าง, ตรง/ยังไม่ครบ/ยังไม่ได้ยิง line
+  counts), ดูรายการค้าง, สร้างรายงานลูกค้า (CSV), ล้างผลการยิง,
+  ลบรายการตาม Article, and ปิดงาน/บันทึก History (closes the batch
+  read-only and writes a `reconcile_history` row). Added
+  `reconcile_history` table and a `remark` column on `reconcile_items` to
+  `reconcile-schema.sql` (re-run it in Supabase to pick up both). See
+  CLAUDE.md for the full write-up, including which parts (the
+  error/rejected-scan split) are inferred rather than confirmed against
+  the legacy system.
 - Dates formatted as dd/mm/yyyy instead of yyyy-mm-dd in live tables,
   the Home page's recent-documents table, and CSV exports.
 - Built out "สินค้าคืนคลัง" (Return) as a full live view (filters, daily
