@@ -4,6 +4,16 @@ All notable changes to this project are documented here. Format is
 loosely based on [Keep a Changelog](https://keepachangelog.com/), grouped
 by date.
 
+## 2026-11-19
+
+### Added
+- เมนู "ตรวจนับสต็อก" (`stockcount`): Dashboard สรุปการนับ (KPI, สถานะ Location,
+  แผนผัง Rack A–V, ตารางภาพรวมแบบชีต CS ตำแหน่งไซส์ 1–13, กราฟ, รายการล่าสุด)
+  ไฟล์ใหม่ `Index/stockcount-dashboard.js` แทนภาพ 3D จำลองเดิมของเมนูนี้
+  **ใช้ข้อมูลตัวอย่างที่สร้างในโค้ด ไม่ใช่ข้อมูลจริง** (repo เป็น public จึงไม่ใส่
+  ข้อมูลสต็อกจริง) ยังไม่มีตารางใน Supabase และยังไม่ต่อกับแอปนับบนมือถือ
+  ปุ่ม ส่งออก Excel / สั่งนับซ้ำ ยังปิดอยู่
+
 ## 2026-09-26
 
 ### Added
