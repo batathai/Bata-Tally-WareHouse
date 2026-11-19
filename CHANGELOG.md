@@ -4,6 +4,30 @@ All notable changes to this project are documented here. Format is
 loosely based on [Keep a Changelog](https://keepachangelog.com/), grouped
 by date.
 
+## 2026-11-19
+
+### Changed
+- หน้าแรก 3D: การ์ด KPI เรียงแนวตั้ง ขนาดเท่ากัน เล็กลง
+- เมนูที่ 3D เต็มจอ (รับสินค้าเข้า, ตรวจสอบสต็อก, ตำแหน่งจัดเก็บ, สต็อกคงเหลือ) เปลี่ยนเป็นแบบกะทัดรัด 460px เหมือน "จ่ายสินค้าออก"
+- พื้น/ลานในฉาก 3D เป็นสีขาวเดียวกับพื้นหลัง (ถนนอ่อนลง) แก้ในบันเดิล 3D ทั้งสองไฟล์ (v=6 / v=2)
+
+### Added
+- เมนู "ตรวจนับสต็อก" (`stockcount`): Dashboard สรุปการนับ (KPI, สถานะ Location,
+  แผนผัง Rack A–V, ตารางภาพรวมแบบชีต CS ตำแหน่งไซส์ 1–13, กราฟ, รายการล่าสุด)
+  ไฟล์ใหม่ `Index/stockcount-dashboard.js` แทนภาพ 3D จำลองเดิมของเมนูนี้
+  **ใช้ข้อมูลตัวอย่างที่สร้างในโค้ด ไม่ใช่ข้อมูลจริง** (repo เป็น public จึงไม่ใส่
+  ข้อมูลสต็อกจริง) ยังไม่มีตารางใน Supabase และยังไม่ต่อกับแอปนับบนมือถือ
+  ปุ่ม ส่งออก Excel / สั่งนับซ้ำ ยังปิดอยู่
+- `stockcount-schema.sql`: ตารางตรวจนับใน Supabase (`sc_cycles`, `sc_locations`,
+  `sc_articles`, `sc_counts`, `sc_location_rounds`, `sc_recounts`) + view สรุป
+  (`sc_item_status`, `sc_location_status`, `sc_rack_summary`, `sc_daily`,
+  `sc_operator_daily`) และ RLS (ทุกคนที่ล็อกอินอ่านได้, admin/warehouse_staff เขียน)
+  กติกา: รอบ 1 = รอบ 2 ต้องเท่ากันเป๊ะ ไม่ตรง → สั่งนับซ้ำรายรายการ รอบ 3 แล้วรอบ 4 (สูงสุด 4)
+  ข้อมูลหลัก (Article/Location) นำเข้าเองแบบส่วนตัว **ห้ามใส่ใน repo**
+- Dashboard ตรวจนับ: ถ้ามีรอบนับสถานะ open และมี Location ใน `sc_locations`
+  จะอ่านข้อมูลจริงจาก Supabase (ผ่าน view ไม่ติดเพดาน 1000 แถว) ไม่เช่นนั้น
+  แสดงข้อมูลตัวอย่างพร้อมแถบแจ้ง
+
 ## 2026-09-26
 
 ### Added

@@ -11,7 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   :root{
-    --bg: #F7F5F3;
+    --bg: #FFFFFF;
     --panel: #FFFFFF;
     --panel-2: #FBF1F1;
     --ink: #241F1D;
@@ -448,27 +448,15 @@
     table{ display:block; overflow-x:auto; }
   }
 
-  /* 3D-WAREHOUSE: icon rail sidebar (desktop) + full-height 3D home */
+  /* 3D-WAREHOUSE: sidebar shows menu names again (icon rail removed) */
   @media (min-width: 721px){
     .shell.ready{ height:100vh; overflow:hidden; }
     .shell.ready .main{ overflow-y:auto; height:100vh; }
-    .sidebar{ width:76px; flex:0 0 76px; padding:18px 0 18px; align-items:center; overflow-y:auto; overflow-x:hidden; scrollbar-width:none; }
-    .sidebar::-webkit-scrollbar{ display:none; }
-    .side-brand{ flex-direction:column; align-items:center; gap:0; padding:2px 0 14px; }
-    .side-brand .mark{ font-size:15px; }
-    .side-brand .sub{ font-size:9px; letter-spacing:.12em; }
-    .side-label{ font-size:0; padding:0; height:1px; width:36px; background:var(--sidebar-line); margin:10px auto; flex:none; }
-    .nav-group{ display:flex; flex-direction:column; align-items:center; gap:4px; width:100%; }
-    .nav-item{ position:relative; width:48px; height:44px; padding:0; justify-content:center; border-radius:12px; border-left:none !important; opacity:.62; flex:none; }
-    .nav-item svg{ width:20px; height:20px; flex:0 0 20px; }
-    .nav-item .nav-txt{ display:none; }
-    .nav-item:hover{ background:var(--panel-2); opacity:1; }
-    .nav-item.active{ background:var(--brand); color:#fff; opacity:1; box-shadow:0 6px 16px rgba(200,16,46,.28); }
-    .nav-item.active svg{ color:#fff; }
-    .nav-item .nav-badge{ position:absolute; top:4px; right:3px; margin:0; min-width:16px; height:16px; line-height:16px; font-size:10px; padding:0 4px; box-shadow:0 0 0 2px var(--sidebar); }
+    .sidebar{ overflow-y:auto; }
     body.wh3d-home .main{ padding:18px 22px 18px; }
     body.wh3d-home .topline{ margin-bottom:14px; }
   }
+  .rail-tip{ display:none !important; }
   .rail-tip{ position:fixed; z-index:9999; pointer-events:none; background:#241F1D; color:#fff; font-size:12.5px; padding:6px 11px; border-radius:8px;
     white-space:nowrap; box-shadow:0 8px 22px rgba(0,0,0,.18); opacity:0; transform:translateX(-4px); transition:opacity .12s, transform .12s; }
   .rail-tip.on{ opacity:1; transform:none; }
@@ -763,15 +751,15 @@
       <style>
         /* 3D-WAREHOUSE */
         .wh3d-wrap{ position:relative; border-radius:18px; overflow:hidden; border:1px solid #EDE6E2; background:#fff; box-shadow:0 18px 50px rgba(70,30,25,.08); }
-        .wh3d-cards{ position:absolute; top:16px; left:16px; right:16px; display:flex; flex-wrap:wrap; gap:12px; pointer-events:none; z-index:3; }
-        .wh3d-card{ pointer-events:auto; background:rgba(255,255,255,.95); border:1px solid #E7DFDA; border-radius:12px; padding:12px 18px; min-width:170px;
+        .wh3d-cards{ position:absolute; top:16px; left:16px; display:flex; flex-direction:column; gap:8px; width:176px; pointer-events:none; z-index:3; }
+        .wh3d-card{ pointer-events:auto; box-sizing:border-box; width:176px; background:rgba(255,255,255,.95); border:1px solid #E7DFDA; border-radius:10px; padding:8px 12px;
           box-shadow:0 10px 30px rgba(70,30,25,.12), 0 1px 0 rgba(30,20,20,.04); backdrop-filter:blur(6px); }
-        .wh3d-lab{ font-size:12px; color:#7A706B; margin-bottom:4px; white-space:nowrap; }
-        .wh3d-val{ font-family:'Space Grotesk','IBM Plex Sans Thai',sans-serif; font-size:24px; font-weight:600; color:#241F1D; font-variant-numeric:tabular-nums; line-height:1.2; white-space:nowrap; }
-        .wh3d-sync{ display:flex; align-items:center; gap:8px; font-size:20px; }
+        .wh3d-lab{ font-size:11.5px; color:#7A706B; margin-bottom:2px; white-space:nowrap; }
+        .wh3d-val{ font-family:'Space Grotesk','IBM Plex Sans Thai',sans-serif; font-size:19px; font-weight:600; color:#241F1D; font-variant-numeric:tabular-nums; line-height:1.2; white-space:nowrap; }
+        .wh3d-sync{ display:flex; align-items:center; gap:8px; font-size:17px; }
         .wh3d-sync i{ width:9px; height:9px; border-radius:50%; background:#2E9B63; box-shadow:0 0 0 0 rgba(46,155,99,.5); animation:wh3dPulse 1.6s infinite; }
         @keyframes wh3dPulse{ 0%{box-shadow:0 0 0 0 rgba(46,155,99,.5)} 100%{box-shadow:0 0 0 8px rgba(46,155,99,0)} }
-        .wh3d-date input{ font-size:15px; padding:5px 8px; margin-top:2px; }
+        .wh3d-date input{ font-size:13.5px; padding:3px 6px; margin-top:2px; width:100%; box-sizing:border-box; }
         .wh3d-zoom{ position:absolute; right:16px; bottom:16px; display:flex; flex-direction:column; gap:6px; z-index:3; }
         .wh3d-zoom button{ width:38px; height:38px; border-radius:10px; border:1px solid #E7DFDA; background:rgba(255,255,255,.95); font-size:18px; cursor:pointer; color:#241F1D; box-shadow:0 4px 14px rgba(70,30,25,.10); }
         .wh3d-zoom button:hover{ background:#FBF1F1; color:#C8102E; }
@@ -852,7 +840,7 @@
       <div class="section-head"><h3>แจ้งเตือนงานกระทบยอด</h3><div class="hint">งานที่มีไฟล์ตั้งต้นแล้ว รอการยิง</div></div>
       <div id="alertsList"><div class="panel empty-note">กำลังโหลด…</div></div>
     </section>
-    <section class="view" id="view-receive"><div class="wh3m-host" data-scene="in" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">รับสินค้าเข้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-receive"><div class="wh3m-host" data-scene="in" style="height:460px"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">รับสินค้าเข้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-dispatch"><div class="wh3m-host" data-scene="out" style="height:460px"></div><!-- 3D-MENUS -->
       <div class="live-toolbar">
         <div class="scope-toggle">
@@ -1099,11 +1087,11 @@
     </section>
     <section class="view" id="view-returnocr"><div class="panel empty-note">OCR รับคืนสินค้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-master"><div class="panel empty-note">มาสเตอร์ดาต้า — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
-    <section class="view" id="view-stockcount"><div class="wh3m-host" data-scene="count" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตรวจนับสต็อก — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-stockaudit"><div class="wh3m-host" data-scene="audit" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตรวจสอบสต็อก — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-stockcount"><div id="stockcountDash"></div><!-- STOCKCOUNT-DASH: Dashboard ตรวจนับสต็อก (Index/stockcount-dashboard.js) แทนภาพ 3D จำลองเดิม --></section>
+    <section class="view" id="view-stockaudit"><div class="wh3m-host" data-scene="audit" style="height:460px"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตรวจสอบสต็อก — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-recheckscan"><div class="panel empty-note">ยิงรีเช็ค — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-bulklocation"><div class="wh3m-host" data-scene="loc" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตำแหน่งจัดเก็บ — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-stockonhand"><div class="wh3m-host" data-scene="stock" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">สต็อกคงเหลือ — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
+    <section class="view" id="view-bulklocation"><div class="wh3m-host" data-scene="loc" style="height:460px"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตำแหน่งจัดเก็บ — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-stockonhand"><div class="wh3m-host" data-scene="stock" style="height:460px"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">สต็อกคงเหลือ — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
     <section class="view" id="view-ocrdoc"><div class="panel empty-note">OCR ตรวจเอกสาร — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-reconcile">
       <div class="live-toolbar">
@@ -2304,6 +2292,7 @@ function showView(name){
   if (name === 'return') loadLive('return');
   if (name === 'shipment' && !shipState.loaded) loadShipment(); // SHIPMENT-STATUS
   if (name === 'transport') loadManifest();
+  if (name === 'stockcount' && window.StockCountDash) StockCountDash.mount(document.getElementById('stockcountDash')); // STOCKCOUNT-DASH
   if (name === 'alerts') loadAlerts();
   if (window.wh3d) window.wh3d.suspend(name !== 'home'); // 3D-WAREHOUSE
   document.body.classList.toggle('wh3d-home', name === 'home');
@@ -2951,24 +2940,19 @@ async function loadPermissions(){
   <div class="ld-body" id="ldBody"></div>
 </dialog>
 <!-- WH-TRACE --><script src="wh-trace-ui.js?v=range1"></script>
-<!-- 3D-WAREHOUSE --><script src="bata-warehouse-3d.bundle.js?v=5"></script>
-<!-- 3D-MENUS --><script src="bata-menus-3d.bundle.js?v=1"></script>
+<!-- 3D-WAREHOUSE --><script src="bata-warehouse-3d.bundle.js?v=8"></script>
+<!-- 3D-MENUS --><script src="bata-menus-3d.bundle.js?v=5"></script>
+<!-- STOCKCOUNT-DASH --><script src="stockcount-dashboard.js?v=1"></script>
 <script>
 // 3D-MENUS: cards shown on each menu's 3D view (numbers come from the same data as the dashboard)
 function wh3mCards(key){
   function t(id){ var e = document.getElementById(id); return e ? e.textContent : '—'; }
   var synced = { label: 'ข้อมูลอัปเดตล่าสุด', value: t('kpiSyncedAt'), dot: true };
-  var sim = function(name){ return { label: name, value: 'ภาพจำลองการทำงาน', text: true }; };
   switch (key) {
     case 'out': return [{ label: 'รายการจ่ายออก (Dispatch)', value: t('kpiDispatch') }, { label: 'มูลค่ารวม (บาท)', value: t('kpiAmount') }, synced];
     case 'in':  return [{ label: 'รายการรับเข้า (Receiving)', value: t('kpiReceiving') }, synced];
-    case 'ret': return [sim('สินค้าคืนคลัง'), synced];
-    case 'trf': return [sim('โอนสินค้าระหว่างคลัง'), synced];
-    case 'ship': return [sim('รถออกส่งสาขา'), synced];
-    case 'loc': return [sim('ตำแหน่งจัดเก็บ')];
-    case 'stock': return [sim('สต็อกคงเหลือ')];
-    case 'audit': return [sim('ตรวจสอบสต็อก')];
-    case 'count': return [sim('ตรวจนับสต็อก')];
+    case 'ret': case 'trf': case 'ship': return [synced];  // ไม่แสดงการ์ด "ภาพจำลอง" อีกต่อไป
+    case 'loc': case 'stock': case 'audit': case 'count': return [];
   }
   return [];
 }
