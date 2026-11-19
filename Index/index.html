@@ -2953,24 +2953,18 @@ async function loadPermissions(){
 </dialog>
 <!-- WH-TRACE --><script src="wh-trace-ui.js?v=range1"></script>
 <!-- 3D-WAREHOUSE --><script src="bata-warehouse-3d.bundle.js?v=6"></script>
-<!-- 3D-MENUS --><script src="bata-menus-3d.bundle.js?v=2"></script>
+<!-- 3D-MENUS --><script src="bata-menus-3d.bundle.js?v=3"></script>
 <!-- STOCKCOUNT-DASH --><script src="stockcount-dashboard.js?v=1"></script>
 <script>
 // 3D-MENUS: cards shown on each menu's 3D view (numbers come from the same data as the dashboard)
 function wh3mCards(key){
   function t(id){ var e = document.getElementById(id); return e ? e.textContent : '—'; }
   var synced = { label: 'ข้อมูลอัปเดตล่าสุด', value: t('kpiSyncedAt'), dot: true };
-  var sim = function(name){ return { label: name, value: 'ภาพจำลองการทำงาน', text: true }; };
   switch (key) {
     case 'out': return [{ label: 'รายการจ่ายออก (Dispatch)', value: t('kpiDispatch') }, { label: 'มูลค่ารวม (บาท)', value: t('kpiAmount') }, synced];
     case 'in':  return [{ label: 'รายการรับเข้า (Receiving)', value: t('kpiReceiving') }, synced];
-    case 'ret': return [sim('สินค้าคืนคลัง'), synced];
-    case 'trf': return [sim('โอนสินค้าระหว่างคลัง'), synced];
-    case 'ship': return [sim('รถออกส่งสาขา'), synced];
-    case 'loc': return [sim('ตำแหน่งจัดเก็บ')];
-    case 'stock': return [sim('สต็อกคงเหลือ')];
-    case 'audit': return [sim('ตรวจสอบสต็อก')];
-    case 'count': return [sim('ตรวจนับสต็อก')];
+    case 'ret': case 'trf': case 'ship': return [synced];  // ไม่แสดงการ์ด "ภาพจำลอง" อีกต่อไป
+    case 'loc': case 'stock': case 'audit': case 'count': return [];
   }
   return [];
 }
