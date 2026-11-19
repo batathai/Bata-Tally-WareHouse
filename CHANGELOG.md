@@ -13,6 +13,15 @@ by date.
   **ใช้ข้อมูลตัวอย่างที่สร้างในโค้ด ไม่ใช่ข้อมูลจริง** (repo เป็น public จึงไม่ใส่
   ข้อมูลสต็อกจริง) ยังไม่มีตารางใน Supabase และยังไม่ต่อกับแอปนับบนมือถือ
   ปุ่ม ส่งออก Excel / สั่งนับซ้ำ ยังปิดอยู่
+- `stockcount-schema.sql`: ตารางตรวจนับใน Supabase (`sc_cycles`, `sc_locations`,
+  `sc_articles`, `sc_counts`, `sc_location_rounds`, `sc_recounts`) + view สรุป
+  (`sc_item_status`, `sc_location_status`, `sc_rack_summary`, `sc_daily`,
+  `sc_operator_daily`) และ RLS (ทุกคนที่ล็อกอินอ่านได้, admin/warehouse_staff เขียน)
+  กติกา: รอบ 1 = รอบ 2 ต้องเท่ากันเป๊ะ ไม่ตรง → สั่งนับซ้ำรายรายการ รอบ 3 แล้วรอบ 4 (สูงสุด 4)
+  ข้อมูลหลัก (Article/Location) นำเข้าเองแบบส่วนตัว **ห้ามใส่ใน repo**
+- Dashboard ตรวจนับ: ถ้ามีรอบนับสถานะ open และมี Location ใน `sc_locations`
+  จะอ่านข้อมูลจริงจาก Supabase (ผ่าน view ไม่ติดเพดาน 1000 แถว) ไม่เช่นนั้น
+  แสดงข้อมูลตัวอย่างพร้อมแถบแจ้ง
 
 ## 2026-09-26
 
