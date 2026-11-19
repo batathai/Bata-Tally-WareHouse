@@ -852,7 +852,7 @@
       <div class="section-head"><h3>แจ้งเตือนงานกระทบยอด</h3><div class="hint">งานที่มีไฟล์ตั้งต้นแล้ว รอการยิง</div></div>
       <div id="alertsList"><div class="panel empty-note">กำลังโหลด…</div></div>
     </section>
-    <section class="view" id="view-receive"><div class="wh3m-host" data-scene="in" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">รับสินค้าเข้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-receive"><div class="wh3m-host" data-scene="in" style="height:460px"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">รับสินค้าเข้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-dispatch"><div class="wh3m-host" data-scene="out" style="height:460px"></div><!-- 3D-MENUS -->
       <div class="live-toolbar">
         <div class="scope-toggle">
@@ -1100,10 +1100,10 @@
     <section class="view" id="view-returnocr"><div class="panel empty-note">OCR รับคืนสินค้า — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-master"><div class="panel empty-note">มาสเตอร์ดาต้า — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
     <section class="view" id="view-stockcount"><div id="stockcountDash"></div><!-- STOCKCOUNT-DASH: Dashboard ตรวจนับสต็อก (Index/stockcount-dashboard.js) แทนภาพ 3D จำลองเดิม --></section>
-    <section class="view" id="view-stockaudit"><div class="wh3m-host" data-scene="audit" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตรวจสอบสต็อก — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-stockaudit"><div class="wh3m-host" data-scene="audit" style="height:460px"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตรวจสอบสต็อก — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-recheckscan"><div class="panel empty-note">ยิงรีเช็ค — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-bulklocation"><div class="wh3m-host" data-scene="loc" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตำแหน่งจัดเก็บ — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
-    <section class="view" id="view-stockonhand"><div class="wh3m-host" data-scene="stock" data-full="1"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">สต็อกคงเหลือ — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
+    <section class="view" id="view-bulklocation"><div class="wh3m-host" data-scene="loc" style="height:460px"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">ตำแหน่งจัดเก็บ — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
+    <section class="view" id="view-stockonhand"><div class="wh3m-host" data-scene="stock" style="height:460px"></div><!-- 3D-MENUS --><div class="panel empty-note" style="display:none">สต็อกคงเหลือ — ยังไม่ได้สร้าง UI ส่วนนี้</div></section>
     <section class="view" id="view-ocrdoc"><div class="panel empty-note">OCR ตรวจเอกสาร — ยังไม่ได้สร้าง UI ส่วนนี้ (เฉพาะ Admin/Warehouse Staff)</div></section>
     <section class="view" id="view-reconcile">
       <div class="live-toolbar">
@@ -2952,8 +2952,8 @@ async function loadPermissions(){
   <div class="ld-body" id="ldBody"></div>
 </dialog>
 <!-- WH-TRACE --><script src="wh-trace-ui.js?v=range1"></script>
-<!-- 3D-WAREHOUSE --><script src="bata-warehouse-3d.bundle.js?v=5"></script>
-<!-- 3D-MENUS --><script src="bata-menus-3d.bundle.js?v=1"></script>
+<!-- 3D-WAREHOUSE --><script src="bata-warehouse-3d.bundle.js?v=6"></script>
+<!-- 3D-MENUS --><script src="bata-menus-3d.bundle.js?v=2"></script>
 <!-- STOCKCOUNT-DASH --><script src="stockcount-dashboard.js?v=1"></script>
 <script>
 // 3D-MENUS: cards shown on each menu's 3D view (numbers come from the same data as the dashboard)
