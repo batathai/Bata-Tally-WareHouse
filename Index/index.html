@@ -11,7 +11,7 @@
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   :root{
-    --bg: #F7F5F3;
+    --bg: #FFFFFF;
     --panel: #FFFFFF;
     --panel-2: #FBF1F1;
     --ink: #241F1D;
@@ -448,27 +448,15 @@
     table{ display:block; overflow-x:auto; }
   }
 
-  /* 3D-WAREHOUSE: icon rail sidebar (desktop) + full-height 3D home */
+  /* 3D-WAREHOUSE: sidebar shows menu names again (icon rail removed) */
   @media (min-width: 721px){
     .shell.ready{ height:100vh; overflow:hidden; }
     .shell.ready .main{ overflow-y:auto; height:100vh; }
-    .sidebar{ width:76px; flex:0 0 76px; padding:18px 0 18px; align-items:center; overflow-y:auto; overflow-x:hidden; scrollbar-width:none; }
-    .sidebar::-webkit-scrollbar{ display:none; }
-    .side-brand{ flex-direction:column; align-items:center; gap:0; padding:2px 0 14px; }
-    .side-brand .mark{ font-size:15px; }
-    .side-brand .sub{ font-size:9px; letter-spacing:.12em; }
-    .side-label{ font-size:0; padding:0; height:1px; width:36px; background:var(--sidebar-line); margin:10px auto; flex:none; }
-    .nav-group{ display:flex; flex-direction:column; align-items:center; gap:4px; width:100%; }
-    .nav-item{ position:relative; width:48px; height:44px; padding:0; justify-content:center; border-radius:12px; border-left:none !important; opacity:.62; flex:none; }
-    .nav-item svg{ width:20px; height:20px; flex:0 0 20px; }
-    .nav-item .nav-txt{ display:none; }
-    .nav-item:hover{ background:var(--panel-2); opacity:1; }
-    .nav-item.active{ background:var(--brand); color:#fff; opacity:1; box-shadow:0 6px 16px rgba(200,16,46,.28); }
-    .nav-item.active svg{ color:#fff; }
-    .nav-item .nav-badge{ position:absolute; top:4px; right:3px; margin:0; min-width:16px; height:16px; line-height:16px; font-size:10px; padding:0 4px; box-shadow:0 0 0 2px var(--sidebar); }
+    .sidebar{ overflow-y:auto; }
     body.wh3d-home .main{ padding:18px 22px 18px; }
     body.wh3d-home .topline{ margin-bottom:14px; }
   }
+  .rail-tip{ display:none !important; }
   .rail-tip{ position:fixed; z-index:9999; pointer-events:none; background:#241F1D; color:#fff; font-size:12.5px; padding:6px 11px; border-radius:8px;
     white-space:nowrap; box-shadow:0 8px 22px rgba(0,0,0,.18); opacity:0; transform:translateX(-4px); transition:opacity .12s, transform .12s; }
   .rail-tip.on{ opacity:1; transform:none; }
@@ -2952,8 +2940,8 @@ async function loadPermissions(){
   <div class="ld-body" id="ldBody"></div>
 </dialog>
 <!-- WH-TRACE --><script src="wh-trace-ui.js?v=range1"></script>
-<!-- 3D-WAREHOUSE --><script src="bata-warehouse-3d.bundle.js?v=7"></script>
-<!-- 3D-MENUS --><script src="bata-menus-3d.bundle.js?v=4"></script>
+<!-- 3D-WAREHOUSE --><script src="bata-warehouse-3d.bundle.js?v=8"></script>
+<!-- 3D-MENUS --><script src="bata-menus-3d.bundle.js?v=5"></script>
 <!-- STOCKCOUNT-DASH --><script src="stockcount-dashboard.js?v=1"></script>
 <script>
 // 3D-MENUS: cards shown on each menu's 3D view (numbers come from the same data as the dashboard)
